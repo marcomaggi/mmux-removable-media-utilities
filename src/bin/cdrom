@@ -1,11 +1,11 @@
 #!/bin/bash
 #
-# USB pendriver control.
+# CD-ROM control.
 
 #page
 #### global variables
 
-declare -r script_PROGNAME=pendrive
+declare -r script_PROGNAME=cdrom
 declare -r script_VERSION=0.1d0
 
 declare -r SUDO='/usr/bin/sudo'
@@ -14,8 +14,8 @@ declare -r UMOUNT='/bin/umount'
 declare -r GAWK='/usr/bin/gawk'
 declare -r GREP='/usr/bin/grep'
 
-declare -r PENDRIVE_DEVICE=/dev/sdb1
-declare -r PENDRIVE_MOUNT_POINT=/mnt/stick
+declare -r CDROM_DEVICE=/dev/sdb1
+declare -r CDROM_MOUNT_POINT=/mnt/cdrom
 
 declare -r USER_ID=$(/usr/bin/id --user)
 declare -r GROUP_ID=$(/usr/bin/id --group)
@@ -33,24 +33,24 @@ declare -A ACTION_DISPATCH_FUNS=(
 declare -r ACTION_DISPATCH_KEYS ACTION_DISPATCH_FUNS
 
 function script_action_mount () {
-    echo "$SUDO" "$MOUNT" "$PENDRIVE_MOUNT_POINT" -o uid="$USER_ID",gid="$GROUP_ID" >&2
-    "$SUDO" "$MOUNT" "$PENDRIVE_MOUNT_POINT" -o uid="$USER_ID",gid="$GROUP_ID"
-    show_mount_point "$PENDRIVE_MOUNT_POINT"
+    echo "$SUDO" "$MOUNT" "$CDROM_MOUNT_POINT" -o uid="$USER_ID",gid="$GROUP_ID" >&2
+    "$SUDO" "$MOUNT" "$CDROM_MOUNT_POINT" -o uid="$USER_ID",gid="$GROUP_ID"
+    show_mount_point "$CDROM_MOUNT_POINT"
 }
 function script_action_umount () {
-    echo "$SUDO" "$UMOUNT" "$PENDRIVE_MOUNT_POINT" >&2
-    "$SUDO" "$UMOUNT" "$PENDRIVE_MOUNT_POINT"
-    show_mount_point "$PENDRIVE_MOUNT_POINT"
+    echo "$SUDO" "$UMOUNT" "$CDROM_MOUNT_POINT" >&2
+    "$SUDO" "$UMOUNT" "$CDROM_MOUNT_POINT"
+    show_mount_point "$CDROM_MOUNT_POINT"
 }
 function script_action_help () {
     printf 'usage: %s COMMAND [options]
-Manage USB pendrives.  Available COMMANDs:
+Manage USB cdroms.  Available COMMANDs:
 
-   $ pendrive mount
-   $ pendrive umount
-   $ pendrive help
-   $ pendrive version
-   $ pendrive version-only
+   $ cdrom mount
+   $ cdrom umount
+   $ cdrom help
+   $ cdrom version
+   $ cdrom version-only
 ' "$script_PROGNAME"
     exit 2
 }
