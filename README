@@ -1,0 +1,106 @@
+
+		       Removable Media Utilities
+		       =========================
+
+
+Topics
+------
+
+  1. Introduction
+  2. License
+  3. Install
+  4. Usage
+  A. Credits
+  B. Bugs
+  C. Resources
+
+
+1. Introduction
+---------------
+
+This package  installs scripts  to handle  removable media  devices: USB
+pendrives, CD-ROMs.
+
+
+2. License
+----------
+
+Copyright (c) 2013 Marco Maggi <marco.maggi-ipsu@poste.it>.
+
+This program is free software: you  can redistribute it and/or modify it
+under the  terms of the GNU  General Public License as  published by the
+Free Software Foundation,  either version 3 of the License,  or (at your
+option) any later version.
+
+This program  is distributed  in the  hope that it  will be  useful, but
+WITHOUT   ANY   WARRANTY;  without   even   the   implied  warranty   of
+MERCHANTABILITY  or  FITNESS FOR  A  PARTICULAR  PURPOSE.  See  the  GNU
+General Public License for more details.
+
+You should have received a copy  of the GNU General Public License along
+with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
+3. Install
+----------
+
+Do this:
+
+    $ cd removable-media-utilities-1.0a0
+    $ mkdir "=build"
+    $ cd "=build"
+
+to inspect the available configuration options:
+
+    $ ../configure --help
+
+then do it:
+
+    $ ../configure [options]
+    $ make
+    $ make tests
+    $ make install
+
+  The  Makefile supports  the  DESTDIR environment  variable to  install
+files in a temporary location, example: to see what will happen:
+
+    $ make -n install DESTDIR=/tmp/marco/removable-media-utilities
+
+to really do it:
+
+    $ make install DESTDIR=/tmp/marco/removable-media-utilities
+
+
+4. Usage
+--------
+
+Read the documentation.
+
+
+A. Credits
+----------
+
+The  stuff was  written by  Marco Maggi.   If this  package exists  it's
+because of the great GNU software tools that he uses all the time.
+
+
+B. Bugs
+-------
+
+Bug reports are appreciated.
+
+
+C. Resources
+------------
+
+The GNU Project software can be found here:
+
+		   <http://www.gnu.org/>
+
+
+
+### end of file
+# Local Variables:
+# mode: text
+# fill-column: 72
+# End:

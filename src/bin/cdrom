@@ -1,0 +1,179 @@
+#!/bin/bash
+#
+# USB pendriver control.
+
+#page
+#### global variables
+
+declare -r script_PROGNAME=pendrive
+declare -r script_VERSION=0.1d0
+
+declare -r SUDO='/usr/bin/sudo'
+declare -r MOUNT='/bin/mount'
+declare -r UMOUNT='/bin/umount'
+declare -r GAWK='/usr/bin/gawk'
+declare -r GREP='/usr/bin/grep'
+
+declare -r PENDRIVE_DEVICE=/dev/sdb1
+declare -r PENDRIVE_MOUNT_POINT=/mnt/stick
+
+declare -r USER_ID=$(/usr/bin/id --user)
+declare -r GROUP_ID=$(/usr/bin/id --group)
+
+#page
+#### main commands dispatching
+
+declare -a ACTION_DISPATCH_KEYS=(mount umount version version-only help)
+declare -A ACTION_DISPATCH_FUNS=(
+    [mount]=script_action_mount
+    [umount]=script_action_umount
+    [help]=script_action_help
+    [version]=script_action_version
+    [version-only]=script_action_version_only)
+declare -r ACTION_DISPATCH_KEYS ACTION_DISPATCH_FUNS
+
+function script_action_mount () {
+    echo "$SUDO" "$MOUNT" "$PENDRIVE_MOUNT_POINT" -o uid="$USER_ID",gid="$GROUP_ID" >&2
+    "$SUDO" "$MOUNT" "$PENDRIVE_MOUNT_POINT" -o uid="$USER_ID",gid="$GROUP_ID"
+    show_mount_point "$PENDRIVE_MOUNT_POINT"
+}
+function script_action_umount () {
+    echo "$SUDO" "$UMOUNT" "$PENDRIVE_MOUNT_POINT" >&2
+    "$SUDO" "$UMOUNT" "$PENDRIVE_MOUNT_POINT"
+    show_mount_point "$PENDRIVE_MOUNT_POINT"
+}
+function script_action_help () {
+    printf 'usage: %s COMMAND [options]
+Manage USB pendrives.  Available COMMANDs:
+
+   $ pendrive mount
+   $ pendrive umount
+   $ pendrive help
+   $ pendrive version
+   $ pendrive version-only
+' "$script_PROGNAME"
+    exit 2
+}
+function script_action_version () {
+    printf '%s %s\n' "$script_PROGNAME" "$script_VERSION"
+    exit 0
+}
+function script_action_version_only () {
+    printf '%s\n' "$script_VERSION"
+    exit 0
+}
+
+#page
+#### helper functions
+
+function show_mount_point () {
+   "$MOUNT" -l | "$GREP" "$1" | "$GAWK" '
+BEGIN {
+   COLOR_NORM_GREEN="\033[32;40m"
+   COLOR_BOLD_GREEN="\033[32;40;1m"
+   COLOR_NORM_PURPLE="\033[35;40m"
+   COLOR_BOLD_PURPLE="\033[35;40;1m"
+   COLOR_NORM_YELLOW="\033[33;40m"
+   COLOR_BOLD_YELLOW="\033[33;40;1m"
+   COLOR_NORM_CYAN="\033[36;40m"
+   COLOR_BOLD_CYAN="\033[36;40;1m"
+   COLOR_RESET="\033[0m"
+}
+// {
+   device=$1
+   mount_point=$3
+   fs_type=$5
+   options=$6
+   label1=$7
+   label2=$8
+   label3=$9
+   printf "%s%-12s%s", \
+     COLOR_BOLD_YELLOW, device, COLOR_RESET
+   printf " on"
+   printf " %s%-12s%s",
+     COLOR_BOLD_CYAN, mount_point, COLOR_RESET
+   printf " %s%s%s", COLOR_NORM_GREEN, fs_type, COLOR_RESET
+   printf " %s", options
+   printf " %s%s %s %s%s", \
+     COLOR_BOLD_PURPLE, label1, label2, label3, COLOR_RESET
+   printf "\n"
+}'
+}
+
+#page
+#### auxiliary functions
+
+function print_error_message () {
+    local MESSAGE=${1:?'missing error message argument'}
+    printf '%s error: %s\n\n' "$script_PROGNAME" "$MESSAGE" >&2
+}
+function print_error_message_and_exit () {
+    local MESSAGE=${1:?'missing error message argument'}
+    print_error_message "$MESSAGE"
+    exit 1
+}
+function printf_error_message () {
+    local MESSAGE=$(printf "$@")
+    print_error_message "$MESSAGE"
+}
+function printf_error_message_and_exit () {
+    local MESSAGE=$(printf "$@")
+    print_error_message_and_exit "$MESSAGE"
+}
+
+function print_warning_message () {
+    local MESSAGE=${1:?'missing warning message argument'}
+    printf '%s warning: %s\n' "$script_PROGNAME" "$MESSAGE" >&2
+}
+function printf_warning_message () {
+    local MESSAGE=$(printf "$@")
+    print_warning_message "$MESSAGE"
+}
+
+function print_verbose_message () {
+    local MESSAGE=${1:?'missing verbose message argument'}
+    printf '%s: %s\n' "$script_PROGNAME" "$MESSAGE" >&2
+}
+function printf_verbose_message () {
+    local MESSAGE=$(printf "$@")
+    print_verbose_message "$MESSAGE"
+}
+
+#page
+#### script actions dispatching
+
+function script_action () {
+    local ACTION_KEY=${1:?"missing ACTION_KEY argument to '$FUNCNAME'"}
+    local -a ACTION_KEYS=ACTION_${ACTION_KEY}_KEYS[@]
+    local -a ACTION_FUNS=ACTION_${ACTION_KEY}_FUNS[@]
+    shift 1
+    if test 1 -le $#
+    then
+        local COMMAND=$1 KEY FUN
+        shift 1
+        for KEY in "${!ACTION_KEYS}"
+        do
+            if test "$KEY" = "$COMMAND"
+            then
+                FUN=ACTION_${ACTION_KEY}_FUNS[$KEY]
+                ${!FUN} "$@"
+                exit $?
+            fi
+        done
+        printf_error_message_and_exit 'invalid subcommand: %s\n' "$COMMAND"
+    else
+        print_error_message_and_exit \
+            'invalid number of arguments, use the "help" subcommand for details'
+    fi
+    exit 0
+}
+
+#page
+#### done
+
+script_action DISPATCH "$@"
+
+### end of file
+# Local Variables:
+# mode: sh-mode
+# End:
