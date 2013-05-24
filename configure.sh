@@ -4,7 +4,7 @@
 
 set -xe
 
-prefix=/usr
+prefix=/usr/local
 
 ../configure \
     --config-cache                              \
