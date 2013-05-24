@@ -40,11 +40,9 @@ declare -r MOUNT='/bin/mount'
 declare -r UMOUNT='/bin/umount'
 declare -r GAWK='/usr/bin/gawk'
 declare -r GREP='/usr/bin/grep'
+declare -r ID='/usr/bin/id'
 
 declare -r CDROM_MOUNT_POINT=/mnt/cdrom
-
-declare -r USER_ID=$(/usr/bin/id --user)
-declare -r GROUP_ID=$(/usr/bin/id --group)
 
 #page
 #### main commands dispatching
@@ -61,20 +59,26 @@ declare -A ACTION_DISPATCH_FUNS=(
 declare -r ACTION_DISPATCH_KEYS ACTION_DISPATCH_FUNS
 
 function script_action_mount () {
-    "$SCRIPT_ARGV0" sudo-mount
+    local -r USR_ID=$("$ID" --user)
+    local -r GRP_ID=$("$ID" --group)
+    echo "$SUDO" "$SCRIPT_ARGV0" sudo-mount "$USR_ID" "$GRP_ID"
+         "$SUDO" "$SCRIPT_ARGV0" sudo-mount "$USR_ID" "$GRP_ID"
     show_mount_point "$CDROM_MOUNT_POINT"
 }
 function script_action_umount () {
-    "$SCRIPT_ARGV0" sudo-umount
+    echo "$SUDO" "$SCRIPT_ARGV0" sudo-umount
+         "$SUDO" "$SCRIPT_ARGV0" sudo-umount
     show_mount_point "$CDROM_MOUNT_POINT"
 }
 function script_action_sudo_mount () {
-    echo "$SUDO" "$MOUNT" "$CDROM_MOUNT_POINT" -o uid="$USER_ID",gid="$GROUP_ID" >&2
-    "$SUDO" "$MOUNT" "$CDROM_MOUNT_POINT" -o uid="$USER_ID",gid="$GROUP_ID"
+    local -r USR_ID=${1:?"$0: missing user ID"}
+    local -r GRP_ID=${2:?"$0: missing group ID"}
+    echo "$MOUNT" "$CDROM_MOUNT_POINT" -o uid="$USR_ID",gid="$GRP_ID" >&2
+         "$MOUNT" "$CDROM_MOUNT_POINT" -o uid="$USR_ID",gid="$GRP_ID"
 }
 function script_action_sudo_umount () {
-    echo "$SUDO" "$UMOUNT" "$CDROM_MOUNT_POINT" >&2
-    "$SUDO" "$UMOUNT" "$CDROM_MOUNT_POINT"
+    echo "$UMOUNT" "$CDROM_MOUNT_POINT" >&2
+         "$UMOUNT" "$CDROM_MOUNT_POINT"
 }
 function script_action_help () {
     printf 'usage: %s COMMAND [options]
