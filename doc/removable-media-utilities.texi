@@ -110,6 +110,7 @@ entitled ``@gnu{} Free Documentation License''.
 @menu
 * overview::                    Overview of the package.
 * pendrive::                    Managing @usb{} pendrives.
+* cdrom::                       Managing CD-ROMs.
 
 Appendices
 
@@ -138,6 +139,11 @@ removable media like @usb{} pendrives and CD-ROMs.
 @c page
 @node pendrive
 @chapter Managing @usb{} pendrives
+
+
+@c page
+@node cdrom
+@chapter Managing CD-ROMs
 
 
 @c page
