@@ -10,7 +10,6 @@ prefix=/usr/local
     --config-cache                              \
     --cache-file=../config.cache                \
     --prefix="${prefix}"                        \
-    --sysconfdir=/etc                           \
     "$@"
 
 ### end of file

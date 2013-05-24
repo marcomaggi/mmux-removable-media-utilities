@@ -1,6 +1,31 @@
 #!/bin/bash
 #
-# USB pendrive control.
+# Part of: Removable Media Utilities
+# Contents: USB pendrive control
+# Date: Fri May 24, 2013
+#
+# Abstract
+#
+#
+#
+# Copyright (C) 2013 Marco Maggi <marco.maggi-ipsu@poste.it>
+#
+# This  program  is free  software:  you  can redistribute  it
+# and/or modify it  under the terms of the  GNU General Public
+# License as published by the Free Software Foundation, either
+# version  3 of  the License,  or (at  your option)  any later
+# version.
+#
+# This  program is  distributed in  the hope  that it  will be
+# useful, but  WITHOUT ANY WARRANTY; without  even the implied
+# warranty  of  MERCHANTABILITY or  FITNESS  FOR A  PARTICULAR
+# PURPOSE.   See  the  GNU  General Public  License  for  more
+# details.
+#
+# You should  have received a  copy of the GNU  General Public
+# License   along   with    this   program.    If   not,   see
+# <http://www.gnu.org/licenses/>.
+#
 
 #page
 #### global variables
@@ -8,13 +33,14 @@
 declare -r script_PROGNAME=pendrive
 declare -r script_VERSION=0.1d0
 
+declare -r SCRIPT_ARGV0="$0"
+
 declare -r SUDO='/usr/bin/sudo'
 declare -r MOUNT='/bin/mount'
 declare -r UMOUNT='/bin/umount'
 declare -r GAWK='/usr/bin/gawk'
 declare -r GREP='/usr/bin/grep'
 
-declare -r PENDRIVE_DEVICE=/dev/sdb1
 declare -r PENDRIVE_MOUNT_POINT=/mnt/stick
 
 declare -r USER_ID=$(/usr/bin/id --user)
@@ -23,24 +49,32 @@ declare -r GROUP_ID=$(/usr/bin/id --group)
 #page
 #### main commands dispatching
 
-declare -a ACTION_DISPATCH_KEYS=(mount umount version version-only help)
+declare -a ACTION_DISPATCH_KEYS=(mount umount sudo-mount sudo-umount version version-only help)
 declare -A ACTION_DISPATCH_FUNS=(
     [mount]=script_action_mount
     [umount]=script_action_umount
+    [sudo-mount]=script_action_sudo_mount
+    [sudo-umount]=script_action_sudo_umount
     [help]=script_action_help
     [version]=script_action_version
     [version-only]=script_action_version_only)
 declare -r ACTION_DISPATCH_KEYS ACTION_DISPATCH_FUNS
 
 function script_action_mount () {
-    echo "$SUDO" "$MOUNT" "$PENDRIVE_MOUNT_POINT" -o uid="$USER_ID",gid="$GROUP_ID" >&2
-    "$SUDO" "$MOUNT" "$PENDRIVE_MOUNT_POINT" -o uid="$USER_ID",gid="$GROUP_ID"
+    "$SCRIPT_ARGV0" sudo-mount
     show_mount_point "$PENDRIVE_MOUNT_POINT"
 }
 function script_action_umount () {
+    "$SCRIPT_ARGV0" sudo-umount
+    show_mount_point "$PENDRIVE_MOUNT_POINT"
+}
+function script_action_sudo_mount () {
+    echo "$SUDO" "$MOUNT" "$PENDRIVE_MOUNT_POINT" -o uid="$USER_ID",gid="$GROUP_ID" >&2
+    "$SUDO" "$MOUNT" "$PENDRIVE_MOUNT_POINT" -o uid="$USER_ID",gid="$GROUP_ID"
+}
+function script_action_sudo_umount () {
     echo "$SUDO" "$UMOUNT" "$PENDRIVE_MOUNT_POINT" >&2
     "$SUDO" "$UMOUNT" "$PENDRIVE_MOUNT_POINT"
-    show_mount_point "$PENDRIVE_MOUNT_POINT"
 }
 function script_action_help () {
     printf 'usage: %s COMMAND [options]
