@@ -62,13 +62,17 @@ function script_action_mount () {
     local -r USR_ID=$("$ID" --user)
     local -r GRP_ID=$("$ID" --group)
     echo "$SUDO" "$SCRIPT_ARGV0" sudo-mount "$USR_ID" "$GRP_ID"
-         "$SUDO" "$SCRIPT_ARGV0" sudo-mount "$USR_ID" "$GRP_ID"
-    show_mount_point "$CDROM_MOUNT_POINT"
+    if "$SUDO" "$SCRIPT_ARGV0" sudo-mount "$USR_ID" "$GRP_ID"
+    then show_mount_point "$CDROM_MOUNT_POINT"
+    else print_error_message_and_exit 'error mounting CD-ROM drive'
+    fi
 }
 function script_action_umount () {
     echo "$SUDO" "$SCRIPT_ARGV0" sudo-umount
-         "$SUDO" "$SCRIPT_ARGV0" sudo-umount
-    show_mount_point "$CDROM_MOUNT_POINT"
+    if "$SUDO" "$SCRIPT_ARGV0" sudo-umount
+    then show_mount_point "$CDROM_MOUNT_POINT"
+    else print_error_message_and_exit 'error unmounting CD-ROM drive'
+    fi
 }
 function script_action_sudo_mount () {
     local -r USR_ID=${1:?"$0: missing user ID"}

@@ -62,19 +62,30 @@ function script_action_mount () {
     local -r USR_ID=$("$ID" --user)
     local -r GRP_ID=$("$ID" --group)
     echo "$SUDO" "$SCRIPT_ARGV0" sudo-mount "$USR_ID" "$GRP_ID"
-         "$SUDO" "$SCRIPT_ARGV0" sudo-mount "$USR_ID" "$GRP_ID"
-    show_mount_point "$PENDRIVE_MOUNT_POINT"
+    if "$SUDO" "$SCRIPT_ARGV0" sudo-mount "$USR_ID" "$GRP_ID"
+    then show_mount_point "$PENDRIVE_MOUNT_POINT"
+    else print_error_message_and_exit 'error mounting USB pendrive'
+    fi
 }
 function script_action_umount () {
     echo "$SUDO" "$SCRIPT_ARGV0" sudo-umount
-         "$SUDO" "$SCRIPT_ARGV0" sudo-umount
-    show_mount_point "$PENDRIVE_MOUNT_POINT"
+    if "$SUDO" "$SCRIPT_ARGV0" sudo-umount
+    then show_mount_point "$PENDRIVE_MOUNT_POINT"
+    else print_error_message_and_exit 'error unmounting USB pendrive'
+    fi
 }
 function script_action_sudo_mount () {
     local -r USR_ID=${1:?"$0: missing user ID"}
     local -r GRP_ID=${2:?"$0: missing group ID"}
     echo "$MOUNT" "$PENDRIVE_MOUNT_POINT" -o uid="$USR_ID",gid="$GRP_ID" >&2
-         "$MOUNT" "$PENDRIVE_MOUNT_POINT" -o uid="$USR_ID",gid="$GRP_ID"
+    if "$MOUNT" "$PENDRIVE_MOUNT_POINT" -o uid="$USR_ID",gid="$GRP_ID"
+    then true
+    else
+        # Not all  file systems  support UID and  GID options,  so retry
+        # without those.
+        echo "$MOUNT" "$PENDRIVE_MOUNT_POINT" >&2
+        "$MOUNT" "$PENDRIVE_MOUNT_POINT"
+    fi
 }
 function script_action_sudo_umount () {
     echo "$UMOUNT" "$PENDRIVE_MOUNT_POINT" >&2
