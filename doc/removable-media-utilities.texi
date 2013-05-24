@@ -134,7 +134,74 @@ Indexes
 
 This document describes version @version{} of @value{PACKAGE}, a
 distribution of @gnu{} Bash scripts; it provides utilities to handle
-removable media like @usb{} pendrives and CD-ROMs.
+removable media like @usb{} pendrives and CD-ROMs.  To use this package,
+the system requirements must be satisfied:
+
+@itemize
+@item
+The scripts expect the group @code{plugdev} to exist and to allow
+members to access removable media; on a Slackware system:
+
+@example
+$ grep plugdev /etc/groups
+plugdev:x:83:user1,user2
+@end example
+
+@item
+When a removable media is plugged in, for example a @usb{} pendrive, the
+device is:
+
+@example
+$ ls -l /dev/sdb1
+brw-rw---- 1 root plugdev 8, 17 May 24 20:13 /dev/sdb1
+@end example
+
+@item
+The file @file{/etc/fstab} contains the following entry for the mount
+point:
+
+@smallexample
+/dev/sdb1 /mnt/stick auto defaults,noauto,sync,nosuid,rw,group 0 0
+@end smallexample
+
+@item
+The command @command{sudo} must be configured appropriately to allow
+members of the group @code{plugdev} to handle removable media.  It is
+suggested to add the following lines to @file{/etc/sudoers}:
+
+@smallexample
+User_Alias      PLUGDEV         = %plugdev
+
+Cmnd_Alias      PENDRIVE_MOUNT  = /usr/local/bin/pendrive sudo-mount [0-9 ]*
+Cmnd_Alias      PENDRIVE_UMOUNT = /usr/local/bin/pendrive sudo-umount
+Cmnd_Alias      PENDRIVE_CMDS   = PENDRIVE_MOUNT, PENDRIVE_UMOUNT
+
+Cmnd_Alias      CDROM_MOUNT     = /usr/local/bin/cdrom sudo-mount [0-9 ]*
+Cmnd_Alias      CDROM_UMOUNT    = /usr/local/bin/cdrom sudo-umount
+Cmnd_Alias      CDROM_CMDS      = CDROM_MOUNT, CDROM_UMOUNT
+
+PLUGDEV         ALL = NOPASSWD: PENDRIVE_CMDS, CDROM_CMDS
+@end smallexample
+@end itemize
+
+With these system configuration, users that are members of the group
+@code{plugdev} can mount a @usb{} pendrive with:
+
+@smallexample
+$ pendrive mount
+/usr/bin/sudo /usr/local/bin/pendrive sudo-mount 1000 1000
+/bin/mount /mnt/stick -o uid=1000,gid=1000
+/dev/sdb1    on /mnt/stick   vfat (rw,nosuid,nodev,sync,uid=1000,gid=1000) [STORE N GO]
+@end smallexample
+
+@noindent
+and unmount it with:
+
+@example
+$ pendrive umount
+/usr/bin/sudo /usr/local/bin/pendrive sudo-umount
+/bin/umount /mnt/stick
+@end example
 
 @c page
 @node pendrive
