@@ -2,7 +2,7 @@
 
 dist_bin_SCRIPTS		= bin/pendrive bin/cdrom
 
-completionsdir			= $(sysconfdir)/completions.d
+completionsdir			= $(sysconfdir)/bash_completion.d
 dist_completions_SCRIPTS	= completions/pendrive.bash completions/cdrom.bash
 
 ### end of file
