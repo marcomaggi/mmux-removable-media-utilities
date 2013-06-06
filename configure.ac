@@ -2,7 +2,7 @@ dnl @configure_input@
 dnl
 
 AC_PREREQ([2.69])
-AC_INIT([Removable Media Utilities],[1.0a0],[marco.maggi-ipsu@poste.it],[removable-media-utilities])
+AC_INIT([Removable Media Utilities],[1.0a1],[marco.maggi-ipsu@poste.it],[removable-media-utilities])
 AC_CONFIG_SRCDIR([src])
 AC_CONFIG_MACRO_DIR([autotools])
 AC_CONFIG_AUX_DIR([autotools])
@@ -12,7 +12,13 @@ AC_PROG_INSTALL
 AC_PROG_LN_S
 AC_PROG_MAKE_SET
 
-AC_CONFIG_FILES([Makefile src/Makefile doc/Makefile])
+AC_CHECK_PROG([MBFLCONFIG],[mbfl-config],[mbfl-config],[:])
+AS_IF([test "$MBFLCONFIG" = :],[AC_MSG_ERROR([cannot find MBFL],[1])])
+
+AC_CHECK_PROG([MBFLPP],[mbflpp.sh],[mbflpp.sh],[:])
+AS_IF([test "$MBFLPP" = :],[AC_MSG_ERROR([cannot find MBFL preprocessor],[1])])
+
+AC_CONFIG_FILES([Makefile src/completions/Makefile src/bin/Makefile doc/Makefile])
 AC_OUTPUT
 
 ### end of file
