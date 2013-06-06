@@ -83,6 +83,7 @@ mbfl_declare_program /bin/id
 mbfl_declare_action_set MAIN
 mbfl_declare_action MAIN MOUNT		NONE mount		'Mount a USB pendrive.'
 mbfl_declare_action MAIN UMOUNT		NONE umount		'Unmount a USB pendrive.'
+mbfl_declare_action MAIN SHOW		NONE show		'Show USB pendrive mount status.'
 mbfl_declare_action MAIN SUDO_MOUNT	NONE sudo-mount		'Internal action.'
 mbfl_declare_action MAIN SUDO_UMOUNT	NONE sudo-umount	'Internal action.'
 mbfl_declare_action MAIN HELP		NONE help		'Print help screen and exit.'
@@ -96,6 +97,10 @@ function script_before_parsing_options_MOUNT () {
 function script_before_parsing_options_UMOUNT () {
     script_USAGE="usage: ${script_PROGNAME} umount [options]"
     script_DESCRIPTION='Unmount a USB pendrive.'
+}
+function script_before_parsing_options_SHOW () {
+    script_USAGE="usage: ${script_PROGNAME} show [options]"
+    script_DESCRIPTION='Show USB pendrive mount status.'
 }
 
 #page
@@ -131,6 +136,9 @@ function script_action_UMOUNT () {
 	mbfl_message_error 'error unmounting USB pendrive'
 	exit_failure
     fi
+}
+function script_action_SHOW () {
+    show_mount_point "$script_option_PENDRIVE_MOUNT_POINT"
 }
 function script_action_SUDO_MOUNT () {
     local MOUNT USR_ID GRP_ID

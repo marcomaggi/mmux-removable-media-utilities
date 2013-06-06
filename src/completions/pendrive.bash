@@ -8,7 +8,7 @@ function p-removable-media-utilities-completion-pendrive () {
     # COMP_CWORD is zero based.  Index 0 is the "pendrive" word.
     case "$COMP_CWORD" in
         1)
-            local first_word_completions='mount umount help version version-only'
+            local first_word_completions='mount umount show help'
             COMPREPLY=(`compgen -W "$first_word_completions" -- "$word_to_be_completed"`)
             ;;
     esac
