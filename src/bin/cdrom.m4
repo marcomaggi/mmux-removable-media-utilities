@@ -36,7 +36,7 @@ declare -r script_COPYRIGHT_YEARS='2013'
 declare -r script_AUTHOR='Marco Maggi'
 declare -r script_LICENSE=GPL
 declare script_USAGE="usage: ${script_PROGNAME} [action] [options]"
-declare script_DESCRIPTION='Perform USB cdrom operations.'
+declare script_DESCRIPTION='Perform CD-ROM operations.'
 declare script_EXAMPLES=
 
 declare -r SCRIPT_ARGV0="$0"
@@ -81,22 +81,22 @@ mbfl_declare_program /bin/id
 #### script actions
 
 mbfl_declare_action_set MAIN
-mbfl_declare_action MAIN MOUNT		NONE mount		'Mount a USB cdrom.'
-mbfl_declare_action MAIN UMOUNT		NONE umount		'Unmount a USB cdrom.'
+mbfl_declare_action MAIN MOUNT		NONE mount		'Mount a CD-ROM.'
+mbfl_declare_action MAIN UMOUNT		NONE umount		'Unmount a CD-ROM.'
 mbfl_declare_action MAIN SHOW		NONE show		'Show CD-ROM mount status.'
 mbfl_declare_action MAIN SUDO_MOUNT	NONE sudo-mount		'Internal action.'
 mbfl_declare_action MAIN SUDO_UMOUNT	NONE sudo-umount	'Internal action.'
 mbfl_declare_action MAIN HELP		NONE help		'Print help screen and exit.'
 
-mbfl_declare_option CDROM_MOUNT_POINT '/mnt/stick' m mount-point witharg 'Select the mount point.'
+mbfl_declare_option CDROM_MOUNT_POINT '/mnt/cdrom' m mount-point witharg 'Select the mount point.'
 
 function script_before_parsing_options_MOUNT () {
     script_USAGE="usage: ${script_PROGNAME} mount [options]"
-    script_DESCRIPTION='Mount a USB cdrom.'
+    script_DESCRIPTION='Mount a CD-ROM.'
 }
 function script_before_parsing_options_UMOUNT () {
     script_USAGE="usage: ${script_PROGNAME} umount [options]"
-    script_DESCRIPTION='Unmount a USB cdrom.'
+    script_DESCRIPTION='Unmount a CD-ROM.'
 }
 function script_before_parsing_options_SHOW () {
     script_USAGE="usage: ${script_PROGNAME} show [options]"
@@ -120,7 +120,7 @@ function script_action_MOUNT () {
 	mbfl_option_verbose && show_mount_point "$script_option_CDROM_MOUNT_POINT"
 	exit_success
     else
-	mbfl_message_error 'error mounting USB cdrom'
+	mbfl_message_error 'error mounting CD-ROM'
 	exit_failure
     fi
 }
@@ -133,7 +133,7 @@ function script_action_UMOUNT () {
 	exit_success
     else
 	show_mount_point "$script_option_CDROM_MOUNT_POINT"
-	mbfl_message_error 'error unmounting USB cdrom'
+	mbfl_message_error 'error unmounting CD-ROM'
 	exit_failure
     fi
 }
