@@ -111,6 +111,7 @@ entitled ``@gnu{} Free Documentation License''.
 * overview::                    Overview of the package.
 * pendrive::                    Managing @usb{} pendrives.
 * cdrom::                       Managing CD-ROMs.
+* floppy-disk::                 Managing floppy disks.
 
 Appendices
 
@@ -180,7 +181,11 @@ Cmnd_Alias      CDROM_MOUNT     = /usr/local/bin/cdrom sudo-mount [0-9 ]*
 Cmnd_Alias      CDROM_UMOUNT    = /usr/local/bin/cdrom sudo-umount
 Cmnd_Alias      CDROM_CMDS      = CDROM_MOUNT, CDROM_UMOUNT
 
-PLUGDEV         ALL = NOPASSWD: PENDRIVE_CMDS, CDROM_CMDS
+Cmnd_Alias      FLOPPY_MOUNT     = /usr/local/bin/floppy-disk sudo-mount [0-9 ]*
+Cmnd_Alias      FLOPPY_UMOUNT    = /usr/local/bin/floppy-disk sudo-umount
+Cmnd_Alias      FLOPPY_CMDS      = FLOPPY_MOUNT, FLOPPY_UMOUNT
+
+PLUGDEV         ALL = NOPASSWD: PENDRIVE_CMDS, CDROM_CMDS, FLOPPY_CMDS
 @end smallexample
 @end itemize
 
@@ -211,6 +216,11 @@ $ pendrive umount
 @c page
 @node cdrom
 @chapter Managing CD-ROMs
+
+
+@c page
+@node floppy-disk
+@chapter Managing floppy disks
 
 
 @c page
