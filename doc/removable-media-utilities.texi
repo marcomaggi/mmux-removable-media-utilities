@@ -173,17 +173,19 @@ suggested to add the following lines to @file{/etc/sudoers}:
 @smallexample
 User_Alias      PLUGDEV         = %plugdev
 
-Cmnd_Alias      PENDRIVE_MOUNT  = /usr/local/bin/pendrive sudo-mount [0-9 ]*
+Cmnd_Alias      PENDRIVE_MOUNT  = /usr/local/bin/pendrive sudo-mount
 Cmnd_Alias      PENDRIVE_UMOUNT = /usr/local/bin/pendrive sudo-umount
 Cmnd_Alias      PENDRIVE_CMDS   = PENDRIVE_MOUNT, PENDRIVE_UMOUNT
 
-Cmnd_Alias      CDROM_MOUNT     = /usr/local/bin/cdrom sudo-mount [0-9 ]*
+Cmnd_Alias      CDROM_MOUNT     = /usr/local/bin/cdrom sudo-mount
 Cmnd_Alias      CDROM_UMOUNT    = /usr/local/bin/cdrom sudo-umount
 Cmnd_Alias      CDROM_CMDS      = CDROM_MOUNT, CDROM_UMOUNT
 
-Cmnd_Alias      FLOPPY_MOUNT     = /usr/local/bin/floppy-disk sudo-mount [0-9 ]*
-Cmnd_Alias      FLOPPY_UMOUNT    = /usr/local/bin/floppy-disk sudo-umount
-Cmnd_Alias      FLOPPY_CMDS      = FLOPPY_MOUNT, FLOPPY_UMOUNT
+Cmnd_Alias      FLOPPY_MOUNT    = /usr/local/bin/floppy-disk sudo-mount
+Cmnd_Alias      FLOPPY_UMOUNT   = /usr/local/bin/floppy-disk sudo-umount
+Cmnd_Alias      FLOPPY_FORMAT   = /usr/local/bin/floppy-disk sudo-format
+Cmnd_Alias      FLOPPY_MKFS     = /usr/local/bin/floppy-disk sudo-mkfs
+Cmnd_Alias      FLOPPY_CMDS     = FLOPPY_MOUNT, FLOPPY_UMOUNT, FLOPPY_FORMAT, FLOPPY_MKFS
 
 PLUGDEV         ALL = NOPASSWD: PENDRIVE_CMDS, CDROM_CMDS, FLOPPY_CMDS
 @end smallexample

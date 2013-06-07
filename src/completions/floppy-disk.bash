@@ -8,7 +8,7 @@ function p-removable-media-utilities-completion-floppy-disk () {
     # COMP_CWORD is zero based.  Index 0 is the "floppy-disk" word.
     case "$COMP_CWORD" in
         1)
-            local first_word_completions='mount umount show help'
+            local first_word_completions='mount umount show format help'
             COMPREPLY=(`compgen -W "$first_word_completions" -- "$word_to_be_completed"`)
             ;;
     esac
