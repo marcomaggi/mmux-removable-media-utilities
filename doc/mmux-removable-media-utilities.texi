@@ -1,7 +1,7 @@
 \input texinfo.tex
 @c %**start of header
-@setfilename removable-media-utilities.info
-@settitle Removable Media Utilities
+@setfilename mmux-removable-media-utilities.info
+@settitle MMUX Removable Media Utilities
 @c %**end of header
 
 @include version.texi
@@ -12,16 +12,16 @@
 @c Values.
 @c ------------------------------------------------------------
 
-@set TITLE                      Removable Media Utilities
+@set TITLE                      MMUX Removable Media Utilities
 
 @c To be used as @value{PACKAGE} whenever we need to include the full
 @c name of this package.
-@set PACKAGE                    Removable Media Utilities
+@set PACKAGE                    MMUX Removable Media Utilities
 
 @c To be used as @value{PACKAGE} whenever we need to include the
 @c nickname of the project: the name that is used to compose the
 @c distribution tarball or the web address.
-@set PACKAGE_NICKNAME           removable-media-utilities
+@set PACKAGE_NICKNAME           mmux-removable-media-utilities
 
 @c To be used as @value{AUTHOR} whenever we need to include the list of
 @c authors of this document.
@@ -37,8 +37,8 @@
 
 @c ------------------------------------------------------------
 
-@set GITHUB_URL                 @url{http://github.com/marcomaggi/removable-media-utilities}
-@set DOCUMENTATION_URL          @url{http://marcomaggi.github.com/docs/removable-media-utilities.html}
+@set GITHUB_URL                 @url{http://github.com/marcomaggi/mmux-removable-media-utilities}
+@set DOCUMENTATION_URL          @url{http://marcomaggi.github.com/docs/mmux-removable-media-utilities.html}
 
 @c page
 @c ------------------------------------------------------------
@@ -88,7 +88,7 @@ entitled ``@gnu{} Free Documentation License''.
 @ifinfo
 @dircategory Development
 @direntry
-* removable-media-utilities: (removable-media-utilities). @value{TITLE}.
+* mmux-removable-media-utilities: (mmux-removable-media-utilities). @value{TITLE}.
 @end direntry
 @end ifinfo
 
@@ -196,9 +196,6 @@ With these system configuration, users that are members of the group
 
 @smallexample
 $ pendrive mount
-/usr/bin/sudo /usr/local/bin/pendrive sudo-mount 1000 1000
-/bin/mount /mnt/stick -o uid=1000,gid=1000
-/dev/sdb1    on /mnt/stick   vfat (rw,nosuid,nodev,sync,uid=1000,gid=1000) [STORE N GO]
 @end smallexample
 
 @noindent
@@ -206,8 +203,6 @@ and unmount it with:
 
 @example
 $ pendrive umount
-/usr/bin/sudo /usr/local/bin/pendrive sudo-umount
-/bin/umount /mnt/stick
 @end example
 
 @c page

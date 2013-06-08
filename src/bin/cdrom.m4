@@ -164,6 +164,74 @@ function script_action_HELP () {
 }
 
 #page
+
+declare -a ACTION_CDROM_KEYS=(make-image mount-image burn erase help)
+declare -A ACTION_CDROM_FUNS=(
+    [make-image]=cdrom-make-image
+    [mount-image]=cdrom-mount-image
+    [burn]=cdrom-burn
+    [erase]=cdrom-erase
+    [help]=script_action_cdrom_help)
+declare -r ACTION_CDROM_KEYS ACTION_CDROM_FUNS
+
+function script_action_cdrom_help () {
+    printf "usage: %s cdrom COMMAND [OPTIONS]
+Execute procedures on CD-ROMs.  The COMMAND argument must be
+one of the following:
+
+   make-image PATH/TO/DIR IMAGENAME.ISO 'THE-LABEL'
+\tPrepare an ISO CDROM image file from a selected directory.
+
+   mount-image IMAGE-PATHNAME
+\tMount a CDROM image file under '/mnt/tmp' using the loop
+\tdevice.
+
+   burn IMAGE-PATHNAME
+\tBurn an already prepared CDROM image.  Makes use of the
+\t'/dev/cdrom' device.
+
+   erase
+\tErase a CDROM.  Makes use of the '/dev/cdrom' device.
+
+   help
+\tPrint this help screen.
+" "$script_PROGNAME"
+    exit 2
+}
+function cdrom-make-image () {
+    local MKISOFS=$(find-executable-in-sane-path mkisofs) || exit 2
+    local DIRECTORY=${1:?"missing source directory parameter to '$FUNCNAME'"}
+    local IMAGE_FILE=${2:?"missing image file pathname parameter to '$FUNCNAME'"}
+    local LABEL=${3:?"missing CDROM label paramter to '$FUNCNAME'"}
+    local MKISOFS_FLAGS="-v -allow-leading-dots -dir-mode 0555 -iso-level 4"
+    exec "$MKISOFS" $MKISOFS_FLAGS -A '$LABEL' -o "$IMAGE_FILE" "$DIRECTORY"
+}
+function cdrom-mount-image () {
+    local LS=$(find-executable-in-sane-path    ls)    || exit 2
+    local MOUNT=$(find-executable-in-sane-path mount) || exit 2
+    local IMAGE_FILE=${1:?"missing image file pathname parameter to '$FUNCNAME'"}
+    local LOOP_DEVICE=/dev/loop1
+    local MOUNT_POINT=/mnt/tmp
+    print_verbose_message 'mounting image under: %s' "$MOUNT_POINT"
+    if ! $SUDO "$MOUNT" -o loop="$LOOP_DEVICE" "$IMAGE_FILE" "$MOUNT_POINT"
+    then exit 1
+    fi
+    "$LS" "$MOUNT_POINT"
+}
+function cdrom-burn () {
+    local CDRECORD=$(find-executable-in-sane-path cdrecord) || exit 2
+    local IMAGE_FILE=${1:?"missing image file pathname parameter to '$FUNCNAME'"}
+    local CDRECORD_FLAGS="-v -raw dev=/dev/cdrom -eject"
+    exec $SUDO "$CDRECORD" $CDRECORD_FLAGS "$IMAGE_FILE"
+}
+function cdrom-erase () {
+    local CDRECORD=$(find-executable-in-sane-path cdrecord) || exit 2
+    local CDRECORD_FLAGS="-v dev=/dev/cdrom blank=fast"
+    exec $SUDO "$CDRECORD" $CDRECORD_FLAGS
+}
+
+
+#page
 #### helper functions
 
 function show_mount_point () {

@@ -4,12 +4,13 @@
 
 set -xe
 
-prefix=/usr/local
+prefix=/usr
 
 ../configure \
     --config-cache                              \
     --cache-file=../config.cache                \
     --prefix="${prefix}"                        \
+    --sysconfdir=/etc                           \
     "$@"
 
 ### end of file
