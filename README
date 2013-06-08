@@ -59,7 +59,9 @@ to inspect the available configuration options:
 
 then do it:
 
-    $ ../configure [options]
+    $ ../configure [options] \
+       --prefix=/usr
+       --sysconfdir=/etc
     $ make
     $ make install
 
