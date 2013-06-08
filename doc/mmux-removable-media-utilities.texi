@@ -136,7 +136,7 @@ Indexes
 This document describes version @version{} of @value{PACKAGE}, a
 distribution of @gnu{} Bash scripts; it provides utilities to handle
 removable media like @usb{} pendrives and CD-ROMs.  To use this package,
-the system requirements must be satisfied:
+the following system requirements must be satisfied:
 
 @itemize
 @item
@@ -148,6 +148,10 @@ $ grep plugdev /etc/groups
 plugdev:x:83:user1,user2
 @end example
 
+@noindent
+allows @samp{user1} and @samp{user2} to mount and unmount removable
+media.
+
 @item
 When a removable media is plugged in, for example a @usb{} pendrive, the
 device is:
@@ -157,6 +161,9 @@ $ ls -l /dev/sdb1
 brw-rw---- 1 root plugdev 8, 17 May 24 20:13 /dev/sdb1
 @end example
 
+@noindent
+device pathnames can be configured with command line options.
+
 @item
 The file @file{/etc/fstab} contains the following entry for the mount
 point:
@@ -165,30 +172,34 @@ point:
 /dev/sdb1 /mnt/stick auto defaults,noauto,sync,nosuid,rw,group 0 0
 @end smallexample
 
+@noindent
+specific options can be customised; the important thing is that
+@file{/etc/fstab} has an entry for the mount point.
+
 @item
-The command @command{sudo} must be configured appropriately to allow
-members of the group @code{plugdev} to handle removable media.  It is
-suggested to add the following lines to @file{/etc/sudoers}:
+This package relies on the program @command{sudo} to allow file system
+mounting and unmounting to the users of the group @samp{plugdev}; such
+policy is configured by the file:
 
-@smallexample
-User_Alias      PLUGDEV         = %plugdev
+@center @file{/etc/sudoers.d/mmux-removable-media-utilities.conf}
 
-Cmnd_Alias      PENDRIVE_MOUNT  = /usr/local/bin/pendrive sudo-mount
-Cmnd_Alias      PENDRIVE_UMOUNT = /usr/local/bin/pendrive sudo-umount
-Cmnd_Alias      PENDRIVE_CMDS   = PENDRIVE_MOUNT, PENDRIVE_UMOUNT
+@noindent
+which is installed on the system by this package: do not blindly accept
+this configuration file!  Take a good look at it and make the necessary
+changes for your host.
 
-Cmnd_Alias      CDROM_MOUNT     = /usr/local/bin/cdrom sudo-mount
-Cmnd_Alias      CDROM_UMOUNT    = /usr/local/bin/cdrom sudo-umount
-Cmnd_Alias      CDROM_CMDS      = CDROM_MOUNT, CDROM_UMOUNT
+Remember that such sudoers file must be installed on the system with
+octal access permissions @samp{0400}; the installation directory
+@file{/etc/sudoers.d} must also have octal access permissions
+@samp{0700}.  Such permissions cannot be enforced by the installation
+infrastructure of this package.
 
-Cmnd_Alias      FLOPPY_MOUNT    = /usr/local/bin/floppy-disk sudo-mount
-Cmnd_Alias      FLOPPY_UMOUNT   = /usr/local/bin/floppy-disk sudo-umount
-Cmnd_Alias      FLOPPY_FORMAT   = /usr/local/bin/floppy-disk sudo-format
-Cmnd_Alias      FLOPPY_MKFS     = /usr/local/bin/floppy-disk sudo-mkfs
-Cmnd_Alias      FLOPPY_CMDS     = FLOPPY_MOUNT, FLOPPY_UMOUNT, FLOPPY_FORMAT, FLOPPY_MKFS
+To enable loading of sudoers configuration modules: we have to include
+the following line in the file @file{/etc/sudoers}:
 
-PLUGDEV         ALL = NOPASSWD: PENDRIVE_CMDS, CDROM_CMDS, FLOPPY_CMDS
-@end smallexample
+@example
+#includedir /etc/sudoers.d
+@end example
 @end itemize
 
 With these system configuration, users that are members of the group

@@ -1,6 +1,6 @@
 
-		       Removable Media Utilities
-		       =========================
+		     MMUX Removable Media Utilities
+		     ==============================
 
 
 Topics
@@ -21,6 +21,8 @@ Topics
 This package  installs scripts  to handle  removable media  devices: USB
 pendrives, CD-ROMs.  It depends upon  the Marco's Bash Functions Library
 (MBFL).
+
+  This package makes use of the GNU Autotools.
 
 
 2. License
@@ -47,9 +49,9 @@ with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 Do this:
 
-    $ cd removable-media-utilities-1.0a0
-    $ mkdir "=build"
-    $ cd "=build"
+    $ cd mmux-removable-media-utilities-1.0a0
+    $ mkdir build
+    $ cd build
 
 to inspect the available configuration options:
 
@@ -59,23 +61,40 @@ then do it:
 
     $ ../configure [options]
     $ make
-    $ make tests
     $ make install
 
   The  Makefile supports  the  DESTDIR environment  variable to  install
 files in a temporary location, example: to see what will happen:
 
-    $ make -n install DESTDIR=/tmp/marco/removable-media-utilities
+    $ make -n install DESTDIR=/tmp/mmux-removable-media-utilities
 
 to really do it:
 
-    $ make install DESTDIR=/tmp/marco/removable-media-utilities
+    $ make install DESTDIR=/tmp/mmux-removable-media-utilities
 
 
 4. Usage
 --------
 
-Read the documentation.
+Read the  documentation.  This  package relies on  "sudo" to  allow file
+system mounting and unmounting to the users of the group "plugdev"; such
+policy is configured by the file:
+
+   /etc/sudoers.d/mmux-removable-media-utilities.conf
+
+which is installed on the system  by this package: do not blindly accept
+this configuration  file!  Take  a good  look at  it make  the necessary
+changes for your host.
+
+  Remember that such  sudoers file must be installed on  the system with
+octal access permissions 0400; the installation directory must also have
+octal access permissions  0700.  Such permissions cannot  be enforced by
+the installation infrastructure of this package.
+
+  To enable loading of sudoers configuration modules: we have to include
+the following line in the file "/etc/sudoers":
+
+   #includedir /etc/sudoers.d
 
 
 A. Credits
