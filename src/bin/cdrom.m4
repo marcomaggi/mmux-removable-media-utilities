@@ -155,7 +155,10 @@ function script_action_SUDO_MOUNT () {
     else
         # Not all  file systems  support UID and  GID options,  so retry
         # without those.
-	mbfl_program_exec "$MOUNT" "$script_option_CDROM_MOUNT_POINT" >&2
+	if mbfl_program_exec "$MOUNT" "$script_option_CDROM_MOUNT_POINT" >&2
+	then true
+	else exit_failure
+	fi
     fi
 }
 function script_action_SUDO_UMOUNT () {
