@@ -110,14 +110,12 @@ function script_before_parsing_options_SHOW () {
 #page
 #### action functions
 
-function main () {
-    mbfl_main_print_usage_screen_brief
-}
 function script_action_MOUNT () {
     local ID USR_ID GRP_ID EXIT_CODE
     ID=$(mbfl_program_found /bin/id)
     USR_ID=$(mbfl_program_exec "$ID" --user)
     GRP_ID=$(mbfl_program_exec "$ID" --group)
+    mbfl_message_verbose 'mounting USB pendrive\n'
     mbfl_program_declare_sudo_user root
     if mbfl_program_exec "$SCRIPT_ARGV0" sudo-mount "$USR_ID" "$GRP_ID" --mount-point="$script_option_PENDRIVE_MOUNT_POINT"
     then
@@ -130,6 +128,7 @@ function script_action_MOUNT () {
 }
 function script_action_UMOUNT () {
     mbfl_program_declare_sudo_user root
+    mbfl_message_verbose 'unmounting USB pendrive\n'
     if mbfl_program_exec "$SCRIPT_ARGV0" sudo-umount --mount-point="$script_option_PENDRIVE_MOUNT_POINT"
 	# Always try to show the mount point.
     then
@@ -150,21 +149,23 @@ function script_action_SUDO_MOUNT () {
     MOUNT=$(mbfl_program_found /bin/mount)
     USR_ID=${ARGV[0]}
     GRP_ID=${ARGV[1]}
+    mbfl_message_verbose 'running mount command\n'
     if mbfl_program_exec "$MOUNT" "$script_option_PENDRIVE_MOUNT_POINT" -o uid="$USR_ID",gid="$GRP_ID" >&2
     then true
     else
+	mbfl_message_verbose 'mounting with UID and GID settings failed\n'
+	mbfl_message_verbose 'trying to mount without UID and GID settings\n'
         # Not all  file systems  support UID and  GID options,  so retry
         # without those.
-	mbfl_program_exec "$MOUNT" "$script_option_PENDRIVE_MOUNT_POINT" >&2
+	if mbfl_program_exec "$MOUNT" "$script_option_PENDRIVE_MOUNT_POINT" >&2
+	then true
+	else exit_failure
+	fi
     fi
 }
 function script_action_SUDO_UMOUNT () {
     UMOUNT=$(mbfl_program_found /bin/umount)
     mbfl_program_exec "$UMOUNT" "$script_option_PENDRIVE_MOUNT_POINT" >&2
-}
-function script_action_HELP () {
-    mbfl_actions_fake_action_set MAIN
-    mbfl_main_print_usage_screen_brief
 }
 
 #page
@@ -211,6 +212,13 @@ BEGIN {
 #page
 #### let's go
 
+function main () {
+    mbfl_main_print_usage_screen_brief
+}
+function script_action_HELP () {
+    mbfl_actions_fake_action_set MAIN
+    mbfl_main_print_usage_screen_brief
+}
 mbfl_main
 
 ### end of file
