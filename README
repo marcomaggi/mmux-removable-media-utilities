@@ -28,7 +28,7 @@ pendrives, CD-ROMs.  It depends upon  the Marco's Bash Functions Library
 2. License
 ----------
 
-Copyright (c) 2013 Marco Maggi <marco.maggi-ipsu@poste.it>.
+Copyright (c) 2013, 2014 Marco Maggi <marco.maggi-ipsu@poste.it>.
 
 This program is free software: you  can redistribute it and/or modify it
 under the  terms of the GNU  General Public License as  published by the
@@ -47,9 +47,10 @@ with this program.  If not, see <http://www.gnu.org/licenses/>.
 3. Install
 ----------
 
-Do this:
+To install from  a proper release tarball, after  unpacking the archive,
+do this:
 
-    $ cd mmux-removable-media-utilities-1.0a0
+    $ cd mmux-removable-media-utilities-1.0.0
     $ mkdir build
     $ cd build
 
@@ -62,6 +63,23 @@ then do it:
     $ ../configure [options] \
        --prefix=/usr
        --sysconfdir=/etc
+    $ make
+    $ make install
+
+  From  a repository  checkout or  snapshot  (the ones  from the  Github
+site): we must  install the GNU Autotools (GNU  Automake, GNU Autoconf),
+then  we must  first run  the script  "autogen.sh" from  the top  source
+directory, to generate the needed files:
+
+    $ cd mmux-removable-media-utilities
+    $ sh autogen.sh
+
+we  should   now  see   the  executable   "configure"  script   and  the
+"Makefile.in" file.  From now on everything  is the same as for building
+from a proper release tarball, but we have to run the "configure" script
+enabling the maintainer mode:
+
+    $ ../configure --enable-maintainer-mode [options]
     $ make
     $ make install
 
@@ -90,7 +108,7 @@ changes for your host.
 
   Remember that such  sudoers file must be installed on  the system with
 octal access permissions 0400; the installation directory must also have
-octal access permissions  0700.  Such permissions cannot  be enforced by
+octal access permissions 0700.  Such permissions *cannot* be enforced by
 the installation infrastructure of this package.
 
   To enable loading of sudoers configuration modules: we have to include
@@ -109,7 +127,8 @@ because of the great GNU software tools that he uses all the time.
 B. Bugs
 -------
 
-Bug reports are appreciated.
+Bug reports are appreciated, register them at Github's Issue Tracker for
+this project.
 
 
 C. Resources
@@ -119,13 +138,21 @@ The GNU Project software can be found here:
 
 			 <http://www.gnu.org/>
 
-Marco's Bash Functions Library can be found here:
+Marco's Bash Functions Library (MBFL) can be found here:
 
 		<http://marcomaggi.github.com/mbfl.html>
 
+development of this package takes place at:
+
+     <http://github.com/marcomaggi/mmux-removable-media-utilities/>
+
+the documentation is available online:
+
+<http://marcomaggi.github.com/docs/mmux-removable-media-utilities.html>
 
 ### end of file
 # Local Variables:
+# coding: utf-8-unix
 # mode: text
 # fill-column: 72
 # End:

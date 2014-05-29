@@ -33,7 +33,7 @@
 
 @c To be used as @value{COPYRIGHT_YEARS} whenever we need to include the
 @c list of copyright years.
-@set COPYRIGHT_YEARS            2013
+@set COPYRIGHT_YEARS            2013, 2014
 
 @c ------------------------------------------------------------
 
@@ -48,12 +48,9 @@
 @copying
 This document describes version @version{} of @value{PACKAGE}, a
 distribution of @gnu{} Bash scripts; it provides utilities to handle
-removable media like @usb{} pendrives and CD-ROMs.
-
-The package is distributed under the terms of the @gnu{} General Public
-License (@gpl{}) and can be downloaded from:
-
-@center @value{GITHUB_URL}
+removable media like @usb{} pendrives and CD-ROMs.  The package is
+distributed under the terms of the @gnu{} General Public License
+(@gpl{}).
 
 @noindent
 Copyright @copyright{} @value{COPYRIGHT_YEARS} by @value{AUTHOR} @value{AUTHOR_EMAIL}
@@ -110,7 +107,7 @@ entitled ``@gnu{} Free Documentation License''.
 @menu
 * overview::                    Overview of the package.
 * pendrive::                    Managing @usb{} pendrives.
-* cdrom::                       Managing CD-ROMs.
+* cdrom::                       Managing @acronym{CD-ROM}s.
 * floppy-disk::                 Managing floppy disks.
 
 Appendices
@@ -191,8 +188,8 @@ changes for your host.
 Remember that such sudoers file must be installed on the system with
 octal access permissions @samp{0400}; the installation directory
 @file{/etc/sudoers.d} must also have octal access permissions
-@samp{0700}.  Such permissions cannot be enforced by the installation
-infrastructure of this package.
+@samp{0700}.  Such permissions @strong{cannot} be enforced by the
+installation infrastructure of this package.
 
 To enable loading of sudoers configuration modules: we have to include
 the following line in the file @file{/etc/sudoers}:
@@ -221,15 +218,92 @@ $ pendrive umount
 @chapter Managing @usb{} pendrives
 
 
+@usb{} pendrive operations are handled by the command
+@command{pendrive}.  Synopsis:
+
+@example
+pendrive [action] [options]
+@end example
+
+Action commands:
+
+@table @code
+@item mount [options] [arguments]
+Mount a @usb{} pendrive.
+
+@item umount [options] [arguments]
+Unmount a @usb{} pendrive.
+
+@item show [options] [arguments]
+Show @usb{} pendrive mount status.
+
+@item sudo-mount [options] [arguments]
+Internal action.
+
+@item sudo-umount [options] [arguments]
+Internal action.
+
+@item help [options] [arguments]
+Print help screen and exit.
+@end table
+
+Options:
+
+@table @code
+@item -m@var{VALUE}
+@item --mount-point=@var{VALUE}
+Select the mount point (default: @file{/mnt/stick}).
+@end table
+
 @c page
 @node cdrom
-@chapter Managing CD-ROMs
+@chapter Managing @acronym{CD-ROM}s
 
+
+@acronym{CD-ROM} operations are handled by the command @command{cdrom}.
+Synopsis:
+
+@example
+cdrom [action] [options]
+@end example
+
+Action commands:
+
+@table @code
+@item mount [options] [arguments]
+Mount a @acronym{CD-ROM}.
+
+@item umount [options] [arguments]
+Unmount a @acronym{CD-ROM}.
+
+@item show [options] [arguments]
+Show @acronym{CD-ROM} mount status.
+
+@item sudo-mount [options] [arguments]
+Internal action.
+
+@item sudo-umount [options] [arguments]
+Internal action.
+
+@item help [options] [arguments]
+Print help screen and exit.
+@end table
+
+Options:
+
+@table @code
+@item -m@var{VALUE}
+@item --mount-point=@var{VALUE}
+Select the mount point (default: @file{/mnt/cdrom}).
+@end table
 
 @c page
 @node floppy-disk
 @chapter Managing floppy disks
 
+
+The package installs also a @command{floppy-disk} which is currently
+undocumented.
 
 @c page
 @c ------------------------------------------------------------
