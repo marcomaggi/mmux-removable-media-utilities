@@ -7,6 +7,7 @@ set -xe
 prefix=/usr
 
 ../configure \
+    --enable-maintainer-mode			\
     --config-cache                              \
     --cache-file=../config.cache                \
     --prefix="${prefix}"                        \
