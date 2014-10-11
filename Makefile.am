@@ -54,6 +54,6 @@ src/bin/floppy-disk : src/bin/floppy-disk.m4
 	test -d src/bin || $(MKDIR_P) src/bin
 	$(MBFLPP) $(MBFLPP_FLAGS) <$< >$@
 
-CLEANFILES		= pendrive cdrom floppy-disk
+CLEANFILES		= src/bin/pendrive src/bin/cdrom src/bin/floppy-disk
 
 ### end of file
