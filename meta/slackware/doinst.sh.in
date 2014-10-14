@@ -6,6 +6,24 @@ set -e
 chmod 0400 /etc/sudoers.d/mmux-removable-media-utilities.conf
 chmod 0700 /etc/sudoers.d
 
+if test -x /usr/bin/pendrive
+then
+    chgrp plugdev /usr/bin/pendrive  --verbose
+    chmod 0750    /usr/bin/pendrive  --verbose
+fi
+
+if test -x /usr/bin/cdrom
+then
+    chgrp plugdev /usr/bin/cdrom  --verbose
+    chmod 0750    /usr/bin/cdrom  --verbose
+fi
+
+if test -x /usr/bin/floppy-disk
+then
+    chgrp plugdev /usr/bin/floppy-disk  --verbose
+    chmod 0750    /usr/bin/floppy-disk  --verbose
+fi
+
 exit 0
 
 ### end of file
