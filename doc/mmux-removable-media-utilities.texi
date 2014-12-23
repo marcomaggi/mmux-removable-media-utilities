@@ -108,6 +108,7 @@ entitled ``@gnu{} Free Documentation License''.
 * overview::                    Overview of the package.
 * pendrive::                    Managing @usb{} pendrives.
 * cdrom::                       Managing @acronym{CD-ROM}s.
+* memory-card::                 Managing @acronym{SD} memory cards.
 * floppy-disk::                 Managing floppy disks.
 
 Appendices
@@ -295,6 +296,48 @@ Options:
 @item -m@var{VALUE}
 @item --mount-point=@var{VALUE}
 Select the mount point (default: @file{/mnt/cdrom}).
+@end table
+
+@c page
+@node memory-card
+@chapter Managing @acronym{SD} memory cards
+
+
+@acronym{SD} memory card operations are handled by the command
+@command{memory-card}.  Synopsis:
+
+@example
+memory-card [action] [options]
+@end example
+
+Action commands:
+
+@table @code
+@item mount [options] [arguments]
+Mount a @acronym{SD} memory card.
+
+@item umount [options] [arguments]
+Unmount a @acronym{SD} memory card.
+
+@item show [options] [arguments]
+Show @acronym{SD} memory card mount status.
+
+@item sudo-mount [options] [arguments]
+Internal action.
+
+@item sudo-umount [options] [arguments]
+Internal action.
+
+@item help [options] [arguments]
+Print help screen and exit.
+@end table
+
+Options:
+
+@table @code
+@item -m@var{VALUE}
+@item --mount-point=@var{VALUE}
+Select the mount point (default: @file{/media/memory}).
 @end table
 
 @c page

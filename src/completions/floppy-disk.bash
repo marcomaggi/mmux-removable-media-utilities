@@ -2,8 +2,8 @@
 #
 # Completions for the "floppy-disk" script.
 
-complete -F p-removable-media-utilities-completion-floppy-disk floppy-disk
-function p-removable-media-utilities-completion-floppy-disk () {
+complete -F p-mmux-removable-media-utilities-completion-floppy-disk floppy-disk
+function p-mmux-removable-media-utilities-completion-floppy-disk () {
     local word_to_be_completed=${COMP_WORDS[${COMP_CWORD}]}
     # COMP_CWORD is zero based.  Index 0 is the "floppy-disk" word.
     case "$COMP_CWORD" in

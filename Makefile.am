@@ -25,6 +25,7 @@ completionsdir		= $(sysconfdir)/bash_completion.d
 dist_completions_SCRIPTS= \
 	src/completions/pendrive.bash		\
 	src/completions/cdrom.bash		\
+	src/completions/memory-card.bash	\
 	src/completions/floppy-disk.bash
 
 #page
@@ -33,11 +34,13 @@ dist_completions_SCRIPTS= \
 EXTRA_DIST		+= \
 	src/bin/pendrive.m4		\
 	src/bin/cdrom.m4		\
+	src/bin/memory-card.m4		\
 	src/bin/floppy-disk.m4
 
 dist_bin_SCRIPTS	= \
 	src/bin/pendrive		\
 	src/bin/cdrom			\
+	src/bin/memory-card		\
 	src/bin/floppy-disk
 
 MBFLPP_FLAGS		= --preserve-comments
@@ -50,10 +53,18 @@ src/bin/cdrom : src/bin/cdrom.m4
 	test -d src/bin || $(MKDIR_P) src/bin
 	$(MBFLPP) $(MBFLPP_FLAGS) <$< >$@
 
+src/bin/memory-card : src/bin/memory-card.m4
+	test -d src/bin || $(MKDIR_P) src/bin
+	$(MBFLPP) $(MBFLPP_FLAGS) <$< >$@
+
 src/bin/floppy-disk : src/bin/floppy-disk.m4
 	test -d src/bin || $(MKDIR_P) src/bin
 	$(MBFLPP) $(MBFLPP_FLAGS) <$< >$@
 
-CLEANFILES		= src/bin/pendrive src/bin/cdrom src/bin/floppy-disk
+CLEANFILES		= \
+	src/bin/pendrive	\
+	src/bin/cdrom		\
+	src/bin/memory-card	\
+	src/bin/floppy-disk
 
 ### end of file
