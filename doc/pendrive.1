@@ -1,0 +1,55 @@
+.\" Copyright (C), 2014  Marco Maggi
+.\" You may distribute this file under the terms of the GNU Free
+.\" Documentation License.
+.TH pendrive 1 2014-12-23
+.SH NAME
+pendrive \- USB pendrive control
+.SH SYNOPSIS
+.sp
+.nf
+\fBpendrive\fR \fImount\fR [OPTIONS]\fR
+\fBpendrive\fR \fIumount\fR [OPTIONS]\fR
+\fBpendrive\fR \fIshow\fR [OPTIONS]\fR
+\fBpendrive\fR \fIhelp\fR
+.fi
+.sp
+.SH DESCRIPTION
+.PP
+This script performs operations on a USB pendrive file system.
+
+.\" ------------------------------------------------------------
+
+.SH SOME  OPTIONS
+.PP
+\fB\-m\fR \fImount-point\fR,
+\fB\-\-mount\-point\fR=\fmount-point\fR
+.RS 4
+Select \fImount-point\fR as directory under  which to mount the pendrive
+file system.  Defaults to \fI/mnt/stick\fR.
+.RE
+
+.\" ------------------------------------------------------------
+
+.SH "SEE ALSO"
+.PP
+The official documentation is distributed in Texinfo format; see the
+file \fBmmux-removable-media-utilities\fR.
+
+.\" ------------------------------------------------------------
+
+.SH BUGS
+.PP
+See the issues at the Github project page:
+.PP
+.RS 4
+\%http://github.com/marcomaggi/mmux-removable-media-utilities/issues
+.RE
+
+.\" ------------------------------------------------------------
+
+.SH AUTHOR
+Marco Maggi <marco.maggi-ipsu@poste.it>
+.\" Local Variables:
+.\" fill-column: 72
+.\" default-justification: left
+.\" End:

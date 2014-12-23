@@ -14,6 +14,12 @@ doc_mmux_removable_media_utilities_TEXINFOS	= \
 	doc/gpl-3.0.texi			\
 	doc/macros.texi
 
+dist_man_MANS		= \
+	doc/pendrive.1		\
+	doc/cdrom.1		\
+	doc/memory-card.1	\
+	doc/floppy-disk.1
+
 ## --------------------------------------------------------------------
 
 sudoersdir		= $(sysconfdir)/sudoers.d

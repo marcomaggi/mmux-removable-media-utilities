@@ -1,0 +1,55 @@
+.\" Copyright (C), 2014  Marco Maggi
+.\" You may distribute this file under the terms of the GNU Free
+.\" Documentation License.
+.TH cdrom 1 2014-12-23
+.SH NAME
+cdrom \- CD-ROM control
+.SH SYNOPSIS
+.sp
+.nf
+\fBcdrom\fR \fImount\fR [OPTIONS]\fR
+\fBcdrom\fR \fIumount\fR [OPTIONS]\fR
+\fBcdrom\fR \fIshow\fR [OPTIONS]\fR
+\fBcdrom\fR \fIhelp\fR
+.fi
+.sp
+.SH DESCRIPTION
+.PP
+This script performs operations on a CD-ROM file system.
+
+.\" ------------------------------------------------------------
+
+.SH SOME  OPTIONS
+.PP
+\fB\-m\fR \fImount-point\fR,
+\fB\-\-mount\-point\fR=\fmount-point\fR
+.RS 4
+Select \fImount-point\fR as directory under  which to mount the CD-ROM
+file system.  Defaults to \fI/mnt/cdrom\fR.
+.RE
+
+.\" ------------------------------------------------------------
+
+.SH "SEE ALSO"
+.PP
+The official documentation is distributed in Texinfo format; see the
+file \fBmmux-removable-media-utilities\fR.
+
+.\" ------------------------------------------------------------
+
+.SH BUGS
+.PP
+See the issues at the Github project page:
+.PP
+.RS 4
+\%http://github.com/marcomaggi/mmux-removable-media-utilities/issues
+.RE
+
+.\" ------------------------------------------------------------
+
+.SH AUTHOR
+Marco Maggi <marco.maggi-ipsu@poste.it>
+.\" Local Variables:
+.\" fill-column: 72
+.\" default-justification: left
+.\" End:
