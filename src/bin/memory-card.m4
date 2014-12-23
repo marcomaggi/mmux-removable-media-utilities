@@ -92,7 +92,7 @@ mbfl_declare_action MAIN SUDO_MOUNT	NONE sudo-mount		'Internal action.'
 mbfl_declare_action MAIN SUDO_UMOUNT	NONE sudo-umount	'Internal action.'
 mbfl_declare_action MAIN HELP		NONE help		'Print help screen and exit.'
 
-mbfl_declare_option MEMORY-CARD_MOUNT_POINT '/media/memory' m mount-point witharg 'Select the mount point.'
+mbfl_declare_option MEMORY_CARD_MOUNT_POINT '/media/memory' m mount-point witharg 'Select the mount point.'
 
 function script_before_parsing_options_MOUNT () {
     script_USAGE="usage: ${script_PROGNAME} mount [options]"
