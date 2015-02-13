@@ -33,7 +33,7 @@
 
 @c To be used as @value{COPYRIGHT_YEARS} whenever we need to include the
 @c list of copyright years.
-@set COPYRIGHT_YEARS            2013, 2014
+@set COPYRIGHT_YEARS            2013, 2014, 2015
 
 @c ------------------------------------------------------------
 
@@ -252,8 +252,13 @@ Options:
 
 @table @code
 @item -m@var{VALUE}
-@item --mount-point=@var{VALUE}
+@itemx --mount-point=@var{VALUE}
 Select the mount point (default: @file{/mnt/stick}).
+
+@item -g@var{group-name}
+@itemx --group=@var{group-name}
+Select @var{group-name} as user's group under which mount the file
+system.  Defaults to the user's group.
 @end table
 
 @c page
@@ -294,8 +299,13 @@ Options:
 
 @table @code
 @item -m@var{VALUE}
-@item --mount-point=@var{VALUE}
+@itemx --mount-point=@var{VALUE}
 Select the mount point (default: @file{/mnt/cdrom}).
+
+@item -g@var{group-name}
+@itemx --group=@var{group-name}
+Select @var{group-name} as user's group under which mount the file
+system.  Defaults to the user's group.
 @end table
 
 @c page
@@ -338,6 +348,11 @@ Options:
 @item -m@var{VALUE}
 @item --mount-point=@var{VALUE}
 Select the mount point (default: @file{/media/memory}).
+
+@item -g@var{group-name}
+@itemx --group=@var{group-name}
+Select @var{group-name} as user's group under which mount the file
+system.  Defaults to the user's group.
 @end table
 
 @c page

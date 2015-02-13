@@ -8,7 +8,7 @@
 #
 #
 #
-# Copyright (C) 2014 Marco Maggi <marco.maggi-ipsu@poste.it>
+# Copyright (C) 2014, 2015 Marco Maggi <marco.maggi-ipsu@poste.it>
 #
 # This  program  is free  software:  you  can redistribute  it
 # and/or modify it  under the terms of the  GNU General Public
@@ -31,8 +31,8 @@
 #### global variables
 
 declare -r script_PROGNAME=memory-card
-declare -r script_VERSION=0.1d0
-declare -r script_COPYRIGHT_YEARS='2014'
+declare -r script_VERSION=0.1d1
+declare -r script_COPYRIGHT_YEARS='2014, 2015'
 declare -r script_AUTHOR='Marco Maggi'
 declare -r script_LICENSE=GPL
 declare script_USAGE="usage: ${script_PROGNAME} [action] [options]"
@@ -42,6 +42,7 @@ declare script_EXAMPLES=
 declare -r SCRIPT_ARGV0="$0"
 
 declare script_option_MEMORY_CARD_MOUNT_POINT=/media/memory
+declare script_option_GROUP_NAME=
 
 #page
 #### library loading
@@ -93,6 +94,7 @@ mbfl_declare_action MAIN SUDO_UMOUNT	NONE sudo-umount	'Internal action.'
 mbfl_declare_action MAIN HELP		NONE help		'Print help screen and exit.'
 
 mbfl_declare_option MEMORY_CARD_MOUNT_POINT '/media/memory' m mount-point witharg 'Select the mount point.'
+mbfl_declare_option GROUP_NAME '' g group witharg "Select the user's group name."
 
 function script_before_parsing_options_MOUNT () {
     script_USAGE="usage: ${script_PROGNAME} mount [options]"
@@ -114,7 +116,10 @@ function script_action_MOUNT () {
     local ID USR_ID GRP_ID EXIT_CODE
     ID=$(mbfl_program_found /bin/id)
     USR_ID=$(mbfl_program_exec "$ID" --user)
-    GRP_ID=$(mbfl_program_exec "$ID" --group)
+    if test -z "$script_option_GROUP_NAME"
+    then GRP_ID=$(mbfl_program_exec "$ID" --group)
+    else GRP_ID=$(mbfl_program_exec "$ID" "$script_option_GROUP_NAME" --group)
+    fi
     mbfl_message_verbose 'mounting SD memory card\n'
     mbfl_program_declare_sudo_user root
     if mbfl_program_exec "$SCRIPT_ARGV0" sudo-mount "$USR_ID" "$GRP_ID" --mount-point="$script_option_MEMORY_CARD_MOUNT_POINT"

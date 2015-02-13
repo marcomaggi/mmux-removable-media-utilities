@@ -1,4 +1,4 @@
-.\" Copyright (C), 2014  Marco Maggi
+.\" Copyright (C), 2014, 2015  Marco Maggi
 .\" You may distribute this file under the terms of the GNU Free
 .\" Documentation License.
 .TH cdrom 1 2014-12-23
@@ -26,6 +26,13 @@ This script performs operations on a CD-ROM file system.
 .RS 4
 Select \fImount-point\fR as directory under  which to mount the CD-ROM
 file system.  Defaults to \fI/mnt/cdrom\fR.
+.RE
+.PP
+\fB\-g\fR \fIgroup-name\fR,
+\fB\-\-group\fR=\fIgroup-name\fR
+.RS 4
+Select \fIgroup-name\fR as user's group under which mount the file
+system.  Defaults to the user's group.
 .RE
 
 .\" ------------------------------------------------------------
