@@ -2,7 +2,7 @@ dnl @configure_input@
 dnl
 
 AC_PREREQ([2.69])
-AC_INIT([MMUX Removable Media Utilities],[1.1.0],[marco.maggi-ipsu@poste.it],
+AC_INIT([MMUX Removable Media Utilities],[1.1.1],[marco.maggi-ipsu@poste.it],
    [mmux-removable-media-utilities],[http://github.com/marcomaggi/mmux-removable-media-utilities/])
 AC_CONFIG_SRCDIR([src])
 AC_CONFIG_MACRO_DIR([meta/autotools])
