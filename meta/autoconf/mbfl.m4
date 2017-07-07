@@ -7,7 +7,7 @@
 #
 #
 #
-# Copyright (c) 2009, 2012 Marco Maggi
+# Copyright (c) 2009, 2012, 2017 Marco Maggi
 # <marco.maggi-ipsu@poste.it>
 #
 # This  program  is free  software:  you  can redistribute  it
@@ -44,5 +44,5 @@ AC_DEFUN([MBFL_SETUP],
 
 ### end of file
 # Local Variables:
-# mode: sh
+# mode: autoconf
 # End:

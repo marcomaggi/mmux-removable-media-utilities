@@ -1,0 +1,62 @@
+.\" Copyright (C), 2017  Marco Maggi
+.\" You may distribute this file under the terms of the GNU Free
+.\" Documentation License.
+.TH phone 1 2017-07-07
+.SH NAME
+phone \- USB phone control
+.SH SYNOPSIS
+.sp
+.nf
+\fBphone\fR \fImount\fR [OPTIONS]\fR
+\fBphone\fR \fIumount\fR [OPTIONS]\fR
+\fBphone\fR \fIshow\fR [OPTIONS]\fR
+\fBphone\fR \fIhelp\fR
+.fi
+.sp
+.SH DESCRIPTION
+.PP
+This script performs operations on a USB phone file system.
+
+.\" ------------------------------------------------------------
+
+.SH SOME  OPTIONS
+.PP
+\fB\-m\fR \fImount-point\fR,
+\fB\-\-mount\-point\fR=\fImount-point\fR
+.RS 4
+Select \fImount-point\fR as directory under  which to mount the phone
+file system.  Defaults to \fI/mnt/stick\fR.
+.RE
+.PP
+\fB\-g\fR \fIgroup-name\fR,
+\fB\-\-group\fR=\fIgroup-name\fR
+.RS 4
+Select \fIgroup-name\fR as user's group under which mount the file
+system.  Defaults to the user's group.
+.RE
+
+.\" ------------------------------------------------------------
+
+.SH "SEE ALSO"
+.PP
+The official documentation is distributed in Texinfo format; see the
+file \fBmmux-removable-media-utilities\fR.
+
+.\" ------------------------------------------------------------
+
+.SH BUGS
+.PP
+See the issues at the Github project page:
+.PP
+.RS 4
+\%http://github.com/marcomaggi/mmux-removable-media-utilities/issues
+.RE
+
+.\" ------------------------------------------------------------
+
+.SH AUTHOR
+Marco Maggi <marco.maggi-ipsu@poste.it>
+.\" Local Variables:
+.\" fill-column: 72
+.\" default-justification: left
+.\" End:

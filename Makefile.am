@@ -16,6 +16,7 @@ doc_mmux_removable_media_utilities_TEXINFOS	= \
 
 dist_man_MANS		= \
 	doc/pendrive.1		\
+	doc/phone.1		\
 	doc/cdrom.1		\
 	doc/memory-card.1	\
 	doc/floppy-disk.1
@@ -32,6 +33,7 @@ dist_completions_SCRIPTS= \
 	src/completions/pendrive.bash		\
 	src/completions/cdrom.bash		\
 	src/completions/memory-card.bash	\
+	src/completions/phone.bash		\
 	src/completions/floppy-disk.bash
 
 #page
@@ -39,12 +41,14 @@ dist_completions_SCRIPTS= \
 
 EXTRA_DIST		+= \
 	src/bin/pendrive.m4		\
+	src/bin/phone.m4		\
 	src/bin/cdrom.m4		\
 	src/bin/memory-card.m4		\
 	src/bin/floppy-disk.m4
 
 dist_bin_SCRIPTS	= \
 	src/bin/pendrive		\
+	src/bin/phone			\
 	src/bin/cdrom			\
 	src/bin/memory-card		\
 	src/bin/floppy-disk
@@ -52,6 +56,10 @@ dist_bin_SCRIPTS	= \
 MBFLPP_FLAGS		= --preserve-comments
 
 src/bin/pendrive : src/bin/pendrive.m4
+	test -d src/bin || $(MKDIR_P) src/bin
+	$(MBFLPP) $(MBFLPP_FLAGS) <$< >$@
+
+src/bin/phone : src/bin/phone.m4
 	test -d src/bin || $(MKDIR_P) src/bin
 	$(MBFLPP) $(MBFLPP_FLAGS) <$< >$@
 
@@ -69,6 +77,7 @@ src/bin/floppy-disk : src/bin/floppy-disk.m4
 
 CLEANFILES		= \
 	src/bin/pendrive	\
+	src/bin/phone		\
 	src/bin/cdrom		\
 	src/bin/memory-card	\
 	src/bin/floppy-disk

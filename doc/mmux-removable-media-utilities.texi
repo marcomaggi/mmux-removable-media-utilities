@@ -33,7 +33,7 @@
 
 @c To be used as @value{COPYRIGHT_YEARS} whenever we need to include the
 @c list of copyright years.
-@set COPYRIGHT_YEARS            2013, 2014, 2015
+@set COPYRIGHT_YEARS            2013, 2014, 2015, 2017
 
 @c ------------------------------------------------------------
 
@@ -107,6 +107,7 @@ entitled ``@gnu{} Free Documentation License''.
 @menu
 * overview::                    Overview of the package.
 * pendrive::                    Managing @usb{} pendrives.
+* phone::                       Managing @usb{} phones.
 * cdrom::                       Managing @acronym{CD-ROM}s.
 * memory-card::                 Managing @acronym{SD} memory cards.
 * floppy-disk::                 Managing floppy disks.
@@ -131,15 +132,14 @@ Indexes
 @chapter Overview of the package
 
 
-This document describes version @version{} of @value{PACKAGE}, a
-distribution of @gnu{} Bash scripts; it provides utilities to handle
-removable media like @usb{} pendrives and CD-ROMs.  To use this package,
-the following system requirements must be satisfied:
+This document describes version @version{} of @value{PACKAGE}, a distribution of @gnu{} Bash
+scripts; it provides utilities to handle removable media like @usb{} pendrives and CD-ROMs.  To use
+this package, the following system requirements must be satisfied:
 
 @itemize
 @item
-The scripts expect the group @code{plugdev} to exist and to allow
-members to access removable media; on a Slackware system:
+The scripts expect the group @code{plugdev} to exist and to allow members to access removable media;
+on a Slackware system:
 
 @example
 $ grep plugdev /etc/groups
@@ -147,12 +147,11 @@ plugdev:x:83:user1,user2
 @end example
 
 @noindent
-allows @samp{user1} and @samp{user2} to mount and unmount removable
-media.
+allows @samp{user1} and @samp{user2} to mount and unmount removable media.
 
 @item
-When a removable media is plugged in, for example a @usb{} pendrive, the
-device is:
+For every mount point we must configure an appropriate device file.  Let's say that when a removable
+media is plugged in, for example a @usb{} pendrive, the device is:
 
 @example
 $ ls -l /dev/sdb1
@@ -160,19 +159,16 @@ brw-rw---- 1 root plugdev 8, 17 May 24 20:13 /dev/sdb1
 @end example
 
 @noindent
-device pathnames can be configured with command line options.
-
-@item
-The file @file{/etc/fstab} contains the following entry for the mount
-point:
+then the file @file{/etc/fstab} must contain the following entry for the mount point:
 
 @smallexample
 /dev/sdb1 /mnt/stick auto defaults,noauto,sync,nosuid,rw,group 0 0
 @end smallexample
 
 @noindent
-specific options can be customised; the important thing is that
-@file{/etc/fstab} has an entry for the mount point.
+specific options can be customised; the important thing is that @file{/etc/fstab} has an entry for
+the mount point @file{/mnt/stick}, or whatever mount point we want to use.  Device pathnames can be
+configured with command line options.
 
 @item
 This package relies on the program @command{sudo} to allow file system
@@ -219,8 +215,15 @@ $ pendrive umount
 @chapter Managing @usb{} pendrives
 
 
-@usb{} pendrive operations are handled by the command
-@command{pendrive}.  Synopsis:
+@usb{} pendrive operations are handled by the command @command{pendrive}.  If the pendrive device is
+@file{/dev/sdb1}, it is suggested to start with the following @file{/etc/fstab} line and customise
+it as needed:
+
+@smallexample
+/dev/sdb1 /mnt/stick auto defaults,noauto,sync,nosuid,rw,group 0 0
+@end smallexample
+
+Synopsis:
 
 @example
 pendrive [action] [options]
@@ -262,11 +265,72 @@ system.  Defaults to the user's group.
 @end table
 
 @c page
+@node phone
+@chapter Managing @usb{} phones
+
+
+Some phones can be mounted through the @usb{} ports and managed like pendrives.  @usb{} phone
+operations are handled by the command @command{phone}.  If the phone device is @file{/dev/sdc}, it
+is suggested to start with the following @file{/etc/fstab} line and customise it as needed:
+
+@smallexample
+/dev/sdc /mnt/phone auto defaults,noauto,sync,nosuid,rw,group 0 0
+@end smallexample
+
+Synopsis:
+
+@example
+phone [action] [options]
+@end example
+
+Action commands:
+
+@table @code
+@item mount [options] [arguments]
+Mount a @usb{} phone.
+
+@item umount [options] [arguments]
+Unmount a @usb{} phone.
+
+@item show [options] [arguments]
+Show @usb{} phone mount status.
+
+@item sudo-mount [options] [arguments]
+Internal action.
+
+@item sudo-umount [options] [arguments]
+Internal action.
+
+@item help [options] [arguments]
+Print help screen and exit.
+@end table
+
+Options:
+
+@table @code
+@item -m@var{VALUE}
+@itemx --mount-point=@var{VALUE}
+Select the mount point (default: @file{/mnt/phone}).
+
+@item -g@var{group-name}
+@itemx --group=@var{group-name}
+Select @var{group-name} as user's group under which mount the file system.  Defaults to the user's
+group.
+@end table
+
+@c page
 @node cdrom
 @chapter Managing @acronym{CD-ROM}s
 
 
-@acronym{CD-ROM} operations are handled by the command @command{cdrom}.
+@acronym{CD-ROM} operations are handled by the command @command{cdrom}.  If the pendrive device is
+@file{/dev/cdrom}, it is suggested to start with the following @file{/etc/fstab} line and customise
+it as needed:
+
+@smallexample
+/dev/cdrom /mnt/cdrom auto defaults,noauto,ro,group,comment=x-gvfs-show 0 0
+@end smallexample
+
 Synopsis:
 
 @example
@@ -313,8 +377,15 @@ system.  Defaults to the user's group.
 @chapter Managing @acronym{SD} memory cards
 
 
-@acronym{SD} memory card operations are handled by the command
-@command{memory-card}.  Synopsis:
+@acronym{SD} memory card operations are handled by the command @command{memory-card}.  If the
+pendrive device is @file{/dev/mmcblk0p1}, it is suggested to start with the following
+@file{/etc/fstab} line and customise it as needed:
+
+@smallexample
+/dev/mmcblk0p1 /media/memory0 auto defaults,noauto,sync,nosuid,rw,group 0 0
+@end smallexample
+
+Synopsis:
 
 @example
 memory-card [action] [options]
@@ -360,8 +431,13 @@ system.  Defaults to the user's group.
 @chapter Managing floppy disks
 
 
-The package installs also a @command{floppy-disk} which is currently
-undocumented.
+The package installs also a @command{floppy-disk} which is currently undocumented.  If the pendrive
+device is @file{/dev/sdb}, it is suggested to start with the following @file{/etc/fstab} line and
+customise it as needed:
+
+@smallexample
+/dev/sdb /mnt/floppy auto defaults,noauto,sync,nosuid,rw,group 0 0
+@end smallexample
 
 @c page
 @c ------------------------------------------------------------
