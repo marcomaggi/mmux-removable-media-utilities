@@ -385,6 +385,15 @@ pendrive device is @file{/dev/mmcblk0p1}, it is suggested to start with the foll
 /dev/mmcblk0p1 /media/memory0 auto defaults,noauto,sync,nosuid,rw,group 0 0
 @end smallexample
 
+If mounting does not work, try to issue this command for the device:
+
+@example
+$ sudo /bin/fdisk -l /dev/mmcblk0
+@end example
+
+@noindent
+and the try mounting again.
+
 Synopsis:
 
 @example
