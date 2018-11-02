@@ -2,8 +2,10 @@ dnl @configure_input@
 dnl
 
 AC_PREREQ([2.69])
-AC_INIT([MMUX Removable Media Utilities],[1.2.0],[marco.maggi-ipsu@poste.it],
+MMUX_PKG_VERSIONS([1],[2],[1],,[noarch])
+AC_INIT([MMUX Removable Media Utilities],MMUX_PACKAGE_VERSION,[marco.maggi-ipsu@poste.it],
    [mmux-removable-media-utilities],[http://github.com/marcomaggi/mmux-removable-media-utilities/])
+MMUX_INIT
 AC_CONFIG_SRCDIR([src])
 AC_CONFIG_MACRO_DIR([meta/autotools])
 AC_CONFIG_AUX_DIR([meta/autotools])
@@ -19,10 +21,7 @@ MBFL_SETUP
 
 AC_CONFIG_FILES([Makefile]
   [meta/slackware/doinst.sh])
+MMUX_OUTPUT
 AC_OUTPUT
 
 ### end of file
-# Local Variables:
-# mode: autoconf
-# page-delimiter: "^#page"
-# End:

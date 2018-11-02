@@ -24,6 +24,18 @@ then
     chmod 0750    /usr/bin/floppy-disk  --verbose
 fi
 
+if test -x /usr/bin/memory-card
+then
+    chgrp plugdev /usr/bin/memory-card  --verbose
+    chmod 0750    /usr/bin/memory-card  --verbose
+fi
+
+if test -x /usr/bin/phone
+then
+    chgrp plugdev /usr/bin/phone  --verbose
+    chmod 0750    /usr/bin/phone  --verbose
+fi
+
 exit 0
 
 ### end of file

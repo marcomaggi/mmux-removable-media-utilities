@@ -36,7 +36,7 @@ dist_completions_SCRIPTS= \
 	src/completions/phone.bash		\
 	src/completions/floppy-disk.bash
 
-#page
+
 #### scripts
 
 EXTRA_DIST		+= \
