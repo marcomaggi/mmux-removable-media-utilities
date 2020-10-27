@@ -40,29 +40,41 @@
 @set GITHUB_URL                 @url{http://github.com/marcomaggi/mmux-removable-media-utilities}
 @set DOCUMENTATION_URL          @url{http://marcomaggi.github.com/docs/mmux-removable-media-utilities.html}
 
+@set REQUIRED_MBFL_VERSION      v3.0.0-devel.4
+
+@c ------------------------------------------------------------------------
+
+@ifhtml
+@macro mbfl{}
+@acronym{mbfl}
+@end macro
+@end ifhtml
+@ifnothtml
+@macro mbfl{}
+MBFL
+@end macro
+@end ifnothtml
+
 @c page
 @c ------------------------------------------------------------
 @c Copyright notice.
 @c ------------------------------------------------------------
 
 @copying
-This document describes version @version{} of @value{PACKAGE}, a
-distribution of @gnu{} Bash scripts; it provides utilities to handle
-removable media like @usb{} pendrives and CD-ROMs.  The package is
-distributed under the terms of the @gnu{} General Public License
-(@gpl{}).
+This document describes version @version{} of @value{PACKAGE}, a distribution of @gnu{} Bash
+scripts; it provides utilities to handle removable media like @usb{} pendrives and CD-ROMs.  This
+package depends upon the external package @mbfl{}, at least version @value{REQUIRED_MBFL_VERSION}.
+The package is distributed under the terms of the @gnu{} General Public License (@gpl{}).
 
 @noindent
 Copyright @copyright{} @value{COPYRIGHT_YEARS} by @value{AUTHOR} @value{AUTHOR_EMAIL}
 
 @quotation
-Permission is granted to copy, distribute and/or modify this document
-under the terms of the @gnu{} Free Documentation License, Version 1.3 or
-any later version published by the Free Software Foundation; with
-Invariant Sections being ``@gnu{} Free Documentation License'' and
-``@gnu{} General Public License'', no Front--Cover Texts, and no
-Back--Cover Texts.  A copy of the license is included in the section
-entitled ``@gnu{} Free Documentation License''.
+Permission is granted to copy, distribute and/or modify this document under the terms of the @gnu{}
+Free Documentation License, Version 1.3 or any later version published by the Free Software
+Foundation; with Invariant Sections being ``@gnu{} Free Documentation License'' and ``@gnu{} General
+Public License'', no Front--Cover Texts, and no Back--Cover Texts.  A copy of the license is
+included in the section entitled ``@gnu{} Free Documentation License''.
 @end quotation
 @end copying
 
@@ -133,8 +145,10 @@ Indexes
 
 
 This document describes version @version{} of @value{PACKAGE}, a distribution of @gnu{} Bash
-scripts; it provides utilities to handle removable media like @usb{} pendrives and CD-ROMs.  To use
-this package, the following system requirements must be satisfied:
+scripts; it provides utilities to handle removable media like @usb{} pendrives and CD-ROMs.  This
+package depends upon the external package @mbfl{}, at least version @value{REQUIRED_MBFL_VERSION}.
+
+To use this package, the following system requirements must be satisfied:
 
 @itemize
 @item
@@ -469,6 +483,10 @@ The documentation of @value{PACKAGE} is available online:
 the latest version of this package can be downloaded from:
 
 @center @value{GITHUB_URL}
+
+We can find the external package @mbfl{} at:
+
+@center @url{http://github.com/marcomaggi/mbfl}
 
 @c page
 @node concept index
