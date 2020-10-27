@@ -20,15 +20,14 @@ Topics
 
 This package  installs scripts  to handle  removable media  devices: USB
 pendrives, CD-ROMs.  It depends upon  the Marco's Bash Functions Library
-(MBFL).
+(MBFL) at least version v3.0.0-devel.4.
 
   This package makes use of the GNU Autotools.
-
 
 2. License
 ----------
 
-Copyright (c) 2013, 2014 Marco Maggi <marco.maggi-ipsu@poste.it>.
+Copyright (c) 2013, 2014, 2020 Marco Maggi <mrc.mgg@gmail.com>.
 
 This program is free software: you  can redistribute it and/or modify it
 under the  terms of the GNU  General Public License as  published by the

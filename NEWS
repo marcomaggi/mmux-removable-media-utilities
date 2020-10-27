@@ -3,6 +3,14 @@
 		     MMUX Removable Media Utilities
 		     ==============================
 
+Version 2.0.0
+-------------
+
+* Updated to MBFL at least v3.0.0-devel.4.
+
+* Added automatic generation of terminal completions scripts.
+
+
 Version 1.2.0
 -------------
 
