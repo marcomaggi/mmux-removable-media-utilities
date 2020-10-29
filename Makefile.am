@@ -18,7 +18,7 @@ doc_mmux_removable_media_utilities_TEXINFOS	= \
 
 dist_man_MANS		=		\
 	doc/cdrom.1			\
-	doc/floppy-disk.1
+	doc/floppy-disk.1		\
 	doc/memory-card.1		\
 	doc/pendrive.1			\
 	doc/phone.1
