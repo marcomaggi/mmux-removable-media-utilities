@@ -67,12 +67,13 @@ mbfl_declare_action_set MAIN
 mbfl_declare_action MAIN MOUNT		NONE mount		'Mount a floppy disk.'
 mbfl_declare_action MAIN UMOUNT		NONE umount		'Unmount a floppy disk.'
 mbfl_declare_action MAIN SHOW		NONE show		'Show floppy disk mount status.'
-mbfl_declare_action MAIN FORMAT		NONE format		'Format a floppy disk.'
 mbfl_declare_action MAIN SUDO_MOUNT	NONE sudo-mount		'Internal action.'
 mbfl_declare_action MAIN SUDO_UMOUNT	NONE sudo-umount	'Internal action.'
+mbfl_declare_action MAIN HELP		HELP help		'Help the user of this script.'
+
+mbfl_declare_action MAIN FORMAT		NONE format		'Format a floppy disk.'
 mbfl_declare_action MAIN SUDO_FORMAT	NONE sudo-format	'Internal action.'
 mbfl_declare_action MAIN SUDO_MKFS	NONE sudo-mkfs		'Internal action.'
-mbfl_declare_action MAIN HELP		HELP help		'Help the user of this script.'
 
 #page
 #### core action functions
