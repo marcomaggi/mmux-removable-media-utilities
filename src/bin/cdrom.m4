@@ -57,13 +57,7 @@ mbfl_declare_program cdrecord
 #page
 #### script actions declaration
 
-mbfl_declare_action_set MAIN
-mbfl_declare_action MAIN MOUNT		NONE mount		'Mount a CD-ROM.'
-mbfl_declare_action MAIN UMOUNT		NONE umount		'Unmount a CD-ROM.'
-mbfl_declare_action MAIN SHOW		NONE show		'Show CD-ROM mount status.'
-mbfl_declare_action MAIN SUDO_MOUNT	NONE sudo-mount		'Internal action.'
-mbfl_declare_action MAIN SUDO_UMOUNT	NONE sudo-umount	'Internal action.'
-mbfl_declare_action MAIN HELP		HELP help		'Help the user of this script.'
+DEFINE_MAIN_ACTIONS_TREE([[[CD-ROM]]])
 
 mbfl_declare_action MAIN MAKE_IMAGE	NONE make-image		'Prepare an ISO9660 CD-ROM image file from a selected directory.'
 mbfl_declare_action MAIN MOUNT_IMAGE	NONE mount-image	'Mount an ISO9660 CD-ROM image file under "/mnt/tmp" using the loop device.'

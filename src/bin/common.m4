@@ -33,9 +33,21 @@ mbfl_declare_program /bin/gawk
 #page
 #### script actions declaration
 
+# DEFINE_MAIN_ACTIONS_TREE(DEVICE_NAME)
+#
+m4_define([[[DEFINE_MAIN_ACTIONS_TREE]]],[[[
 mbfl_declare_action_set HELP
 mbfl_declare_action HELP HELP_USAGE			NONE usage			'Print the help screen and exit.'
 mbfl_declare_action HELP HELP_PRINT_COMPLETIONS_SCRIPT	NONE print-completions-script	'Print the completions script for this program.'
+
+mbfl_declare_action_set MAIN
+mbfl_declare_action MAIN MOUNT		NONE mount		'Mount a $1.'
+mbfl_declare_action MAIN UMOUNT		NONE umount		'Unmount a $1.'
+mbfl_declare_action MAIN SHOW		NONE show		'Show $1 mount status.'
+mbfl_declare_action MAIN SUDO_MOUNT	NONE sudo-mount		'Internal action.'
+mbfl_declare_action MAIN SUDO_UMOUNT	NONE sudo-umount	'Internal action.'
+mbfl_declare_action MAIN HELP		HELP help		'Help the user of this script.'
+]]])
 
 #page
 #### action functions: core, device generic, actions

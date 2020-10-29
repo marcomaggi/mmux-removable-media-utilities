@@ -51,13 +51,7 @@ m4_include([[[common.m4]]])
 #page
 #### script actions declaration
 
-mbfl_declare_action_set MAIN
-mbfl_declare_action MAIN MOUNT		NONE mount		'Mount a SD memory card.'
-mbfl_declare_action MAIN UMOUNT		NONE umount		'Unmount a SD memory card.'
-mbfl_declare_action MAIN SHOW		NONE show		'Show SD memory card mount status.'
-mbfl_declare_action MAIN SUDO_MOUNT	NONE sudo-mount		'Internal action.'
-mbfl_declare_action MAIN SUDO_UMOUNT	NONE sudo-umount	'Internal action.'
-mbfl_declare_action MAIN HELP		HELP help		'Help the user of this script.'
+DEFINE_MAIN_ACTIONS_TREE([[[SD memory card]]])
 
 #page
 #### action functions: generic actions
