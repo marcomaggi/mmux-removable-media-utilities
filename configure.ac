@@ -60,7 +60,7 @@ AC_DEFUN([MMUX_DEFINE_MOUNT_POINT_OPTION],
 MMUX_DEFINE_MOUNT_POINT_OPTION([CDROM],[/mnt/cdrom])
 MMUX_DEFINE_MOUNT_POINT_OPTION([FLOPPY_DISK],[/mnt/floppy])
 MMUX_DEFINE_MOUNT_POINT_OPTION([MEMORY_CARD],[/mnt/memory])
-MMUX_DEFINE_MOUNT_POINT_OPTION([PENDRIVE],[/mnt/pendrive])
+MMUX_DEFINE_MOUNT_POINT_OPTION([PENDRIVE],[/mnt/stick])
 MMUX_DEFINE_MOUNT_POINT_OPTION([PHONE],[/mnt/phone])
 
 dnl --------------------------------------------------------------------
