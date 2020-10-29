@@ -41,8 +41,37 @@ AC_PROG_MKDIR_P
 AC_CHECK_PROG([BASH_PROGRAM],[bash],[bash],[:])
 MBFL_SETUP
 
+dnl --------------------------------------------------------------------
+
+# We can  use "CDROM_MOUNT_POINT" on  the commnd line of  "configure" to
+# select     a    value.      We     can     use    the     substitution
+# "DEFAULT_CDROM_MOUNT_POINT" to use the value in scripts.
+#
+# Similarly for other devices.
+#
+AC_DEFUN([MMUX_DEFINE_MOUNT_POINT_OPTION],
+  [AS_VAR_SET([PRESET_$1_MOUNT_POINT],['$2'])
+   AC_CACHE_CHECK([default mount point for $1],[mmux_cv_DEFAULT_$1_MOUNT_POINT],
+     [AS_IF([test -n "$$1_MOUNT_POINT"],
+            [AS_VAR_SET([mmux_cv_DEFAULT_$1_MOUNT_POINT],["$$1_MOUNT_POINT"])],
+            [AS_VAR_SET([mmux_cv_DEFAULT_$1_MOUNT_POINT],["$PRESET_$1_MOUNT_POINT"])])])
+   AC_SUBST([DEFAULT_$1_MOUNT_POINT],[$mmux_cv_DEFAULT_$1_MOUNT_POINT])])
+
+MMUX_DEFINE_MOUNT_POINT_OPTION([CDROM],[/mnt/cdrom])
+MMUX_DEFINE_MOUNT_POINT_OPTION([FLOPPY_DISK],[/mnt/floppy])
+MMUX_DEFINE_MOUNT_POINT_OPTION([MEMORY_CARD],[/mnt/memory])
+MMUX_DEFINE_MOUNT_POINT_OPTION([PENDRIVE],[/mnt/pendrive])
+MMUX_DEFINE_MOUNT_POINT_OPTION([PHONE],[/mnt/phone])
+
+dnl --------------------------------------------------------------------
+
 AC_CONFIG_FILES([Makefile]
-  [meta/slackware/doinst.sh])
+  [meta/slackware/doinst.sh]
+  [src/bin/cdrom.m4]
+  [src/bin/floppy-disk.m4]
+  [src/bin/memory-card.m4]
+  [src/bin/pendrive.m4]
+  [src/bin/phone.m4])
 MMUX_OUTPUT
 AC_OUTPUT
 

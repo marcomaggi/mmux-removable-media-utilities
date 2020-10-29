@@ -39,7 +39,7 @@ declare -r COMPLETIONS_SCRIPT_NAMESPACE='p-mmux-removable-media-utilities'
 ### ------------------------------------------------------------------------
 
 declare -r SCRIPT_ARGV0="$0"
-declare -r DEFAULT_MOUNT_POINT=/media/memory
+declare -r DEFAULT_MOUNT_POINT='@DEFAULT_MEMORY_CARD_MOUNT_POINT@'
 declare -r DEFAULT_GROUP_NAME=
 
 #page

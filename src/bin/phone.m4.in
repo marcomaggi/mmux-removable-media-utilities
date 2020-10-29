@@ -1,13 +1,13 @@
 #
 # Part of: MMUX Removable Media Utilities
-# Contents: USB pendrive control
-# Date: Fri May 24, 2013
+# Contents: USB phone control
+# Date: Jul  7, 2017
 #
 # Abstract
 #
 #
 #
-# Copyright (C) 2013, 2015, 2020 Marco Maggi <mrc.mgg@gmail.com>
+# Copyright (C) 2017, 2020 Marco Maggi <mrc.mgg@gmail.com>
 #
 # This program is free software: you can redistribute it and/or modify it under the terms of the GNU
 # General Public  License as  published by  the Free Software  Foundation, either  version 3  of the
@@ -24,13 +24,13 @@
 #page
 #### global variables
 
-declare -r script_PROGNAME=pendrive
-declare -r script_VERSION=0.3.0-devel.0
-declare -r script_COPYRIGHT_YEARS='2013, 2015, 2020'
+declare -r script_PROGNAME=phone
+declare -r script_VERSION=0.2.0-devel.0
+declare -r script_COPYRIGHT_YEARS='2017, 2020'
 declare -r script_AUTHOR='Marco Maggi'
 declare -r script_LICENSE=GPL
 declare script_USAGE="usage: ${script_PROGNAME} [action] [options]"
-declare script_DESCRIPTION='Perform USB pendrive operations.'
+declare script_DESCRIPTION='Perform USB phone operations.'
 declare script_EXAMPLES=
 
 declare -r script_REQUIRED_MBFL_VERSION=v3.0.0-devel.4
@@ -39,7 +39,7 @@ declare -r COMPLETIONS_SCRIPT_NAMESPACE='p-mmux-removable-media-utilities'
 ### ------------------------------------------------------------------------
 
 declare -r SCRIPT_ARGV0="$0"
-declare -r DEFAULT_MOUNT_POINT=/mnt/stick
+declare -r DEFAULT_MOUNT_POINT='@DEFAULT_PHONE_MOUNT_POINT@'
 declare -r DEFAULT_GROUP_NAME=
 
 #page
@@ -49,14 +49,14 @@ mbfl_library_loader
 m4_include([[[common.m4]]])
 
 #page
-#### script actions declaration
+#### script actions
 
-DEFINE_MAIN_ACTIONS_TREE([[[USB pendrive]]])
+DEFINE_MAIN_ACTIONS_TREE([[[USB phone]]])
 
 #page
-#### action functions
+#### action functions: generic actions
 
-DEVICE_GENERIC_ACTIONS([[[USB pendrive]]])
+DEVICE_GENERIC_ACTIONS([[[USB phone]]])
 
 #page
 #### let's go

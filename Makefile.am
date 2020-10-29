@@ -74,12 +74,7 @@ src/etc/bash_completion.d/phone.bash: src/bin/phone $(completions_PREREQUISITES)
 #### scripts
 
 EXTRA_DIST		+=		\
-	src/bin/common.m4		\
-	src/bin/cdrom.m4		\
-	src/bin/floppy-disk.m4		\
-	src/bin/memory-card.m4		\
-	src/bin/pendrive.m4		\
-	src/bin/phone.m4
+	src/bin/common.m4
 
 bin_SCRIPTS		=		\
 	src/bin/cdrom			\

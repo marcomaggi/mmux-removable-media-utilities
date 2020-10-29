@@ -65,6 +65,24 @@ then do it:
     $ make
     $ make install
 
+We can set the following variables on the command line of "configure" to
+select default values:
+
+* CDROM_MOUNT_POINT:  selects the  mount point  of CD-ROMs,  defaults to
+  "/mnd/cdrom".
+
+* FLOPPY_DISK_MOUNT_POINT:  selects the  mount  point  of floppy  disks,
+  defaults to "/mnd/floppy".
+
+* MEMORY_CARD_MOUNT_POINT: selects  the mount point of  SD memory cards,
+  defaults to "/mnd/cdrom".
+
+* PENDRIVE_MOUNT_POINT:  selects  the  mount  point  of  USB  pendrives,
+  defaults to "/mnd/stick".
+
+* PHONE_MOUNT_POINT: selects the mount point  of USB phones, defaults to
+  "/mnd/phone".
+
   From  a repository  checkout or  snapshot  (the ones  from the  Github
 site): we must  install the GNU Autotools (GNU  Automake, GNU Autoconf),
 then  we must  first run  the script  "autogen.sh" from  the top  source
