@@ -39,35 +39,23 @@ declare -r COMPLETIONS_SCRIPT_NAMESPACE='p-mmux-removable-media-utilities'
 ### ------------------------------------------------------------------------
 
 declare -r SCRIPT_ARGV0="$0"
-
-declare script_option_CDROM_MOUNT_POINT=/mnt/cdrom
-declare script_option_GROUP_NAME=
+declare -r DEFAULT_MOUNT_POINT=/mnt/cdrom
+declare -r DEFAULT_GROUP_NAME=
 
 #page
-#### library loading
+#### library loading and imports
 
 mbfl_library_loader
+m4_include([[[common.m4]]])
 
 #page
 #### program declarations
 
-mbfl_program_enable_sudo
-mbfl_declare_program /bin/mount
-mbfl_declare_program /bin/umount
-mbfl_declare_program /bin/grep
-mbfl_declare_program /bin/gawk
-mbfl_declare_program /bin/id
 mbfl_declare_program mkisofs
 mbfl_declare_program cdrecord
 
 #page
-#### script actions
-
-mbfl_declare_action_set HELP
-mbfl_declare_action HELP HELP_USAGE			NONE usage			'Print the help screen and exit.'
-mbfl_declare_action HELP HELP_PRINT_COMPLETIONS_SCRIPT	NONE print-completions-script	'Print the completions script for this program.'
-
-### --------------------------------------------------------------------
+#### script actions declaration
 
 mbfl_declare_action_set MAIN
 mbfl_declare_action MAIN MOUNT		NONE mount		'Mount a CD-ROM.'
@@ -85,91 +73,12 @@ mbfl_declare_action MAIN SUDO_UMOUNT	NONE sudo-umount	'Internal action.'
 mbfl_declare_action MAIN HELP		HELP help		'Help the user of this script.'
 
 #page
-#### main function
+#### action functions: generic actions
 
-function main () {
-    mbfl_main_print_usage_screen_brief
-}
+DEVICE_GENERIC_ACTIONS([[[CD-ROM]]])
 
 #page
-#### action functions
-
-function script_before_parsing_options_MOUNT () {
-    script_USAGE="usage: ${script_PROGNAME} mount [options]"
-    script_DESCRIPTION='Mount a CD-ROM.'
-
-    mbfl_declare_option CDROM_MOUNT_POINT '/mnt/cdrom' m mount-point witharg 'Select the mount point.'
-    mbfl_declare_option GROUP_NAME        ''           g group       witharg "Select the user's group name."
-}
-function script_action_MOUNT () {
-    local ID USR_ID GRP_ID
-
-    mbfl_program_found_var ID /bin/id || exit $?
-
-    mbfl_option_test_save
-    {
-	USR_ID=$(mbfl_program_exec "$ID" --user)
-
-	if mbfl_string_is_empty "$script_option_GROUP_NAME"
-	then GRP_ID=$(mbfl_program_exec "$ID" --group)
-	else GRP_ID=$(mbfl_program_exec "$ID" "$script_option_GROUP_NAME" --group)
-	fi
-    }
-    mbfl_option_test_restore
-
-    mbfl_message_verbose_printf 'mounting a CD-ROM under the mount point: "%s"\n' "$script_option_CDROM_MOUNT_POINT"
-    mbfl_message_verbose_printf 'using the user id "%s" and group id "%s"\n' "$USR_ID" "$GRP_ID"
-
-    mbfl_program_declare_sudo_user root
-    if mbfl_program_exec "$SCRIPT_ARGV0" sudo-mount "$USR_ID" "$GRP_ID" --mount-point="$script_option_CDROM_MOUNT_POINT"
-    then
-	if mbfl_option_verbose
-	then show_mount_point "$script_option_CDROM_MOUNT_POINT"
-	fi
-	exit_because_success
-    else
-	mbfl_message_error_printf 'error mounting CD-ROM under the mount point: "%s"' "$script_option_CDROM_MOUNT_POINT"
-	exit_because_failure
-    fi
-}
-
-### ------------------------------------------------------------------------
-
-function script_before_parsing_options_UMOUNT () {
-    script_USAGE="usage: ${script_PROGNAME} umount [options]"
-    script_DESCRIPTION='Unmount a CD-ROM.'
-
-    mbfl_declare_option CDROM_MOUNT_POINT '/mnt/cdrom' m mount-point witharg 'Select the mount point.'
-}
-function script_action_UMOUNT () {
-    mbfl_program_declare_sudo_user root
-    if mbfl_program_exec "$SCRIPT_ARGV0" sudo-umount --mount-point="$script_option_CDROM_MOUNT_POINT"
-    then
-	# Always try to show the mount point.
-	if mbfl_option_verbose
-	then show_mount_point "$script_option_CDROM_MOUNT_POINT"
-	fi
-	exit_success
-    else
-	show_mount_point "$script_option_CDROM_MOUNT_POINT"
-	mbfl_message_error_printf 'error unmounting CD-ROM from: "%s"' "$script_option_CDROM_MOUNT_POINT"
-	exit_failure
-    fi
-}
-
-### ------------------------------------------------------------------------
-
-function script_before_parsing_options_SHOW () {
-    script_USAGE="usage: ${script_PROGNAME} show [options]"
-    script_DESCRIPTION='Show CD-ROM mount status.'
-
-    mbfl_declare_option CDROM_MOUNT_POINT '/mnt/cdrom' m mount-point witharg 'Select the mount point.'
-}
-function script_action_SHOW () {
-    show_mount_point "$script_option_CDROM_MOUNT_POINT"
-}
-
-### ------------------------------------------------------------------------
+#### script actions: device specific actions
 
 function script_before_parsing_options_MAKE_IMAGE () {
     script_USAGE="usage: ${script_PROGNAME} make-image [options] PATH/TO/DIR IMAGENAME.iso 'THE-LABEL'"
@@ -182,8 +91,25 @@ function script_action_MAKE_IMAGE () {
 	mbfl_command_line_argument(IMAGE_FILE, 2)
 	mbfl_command_line_argument(LABEL, 3)
 
-	local MKISOFS MKISOFS_FLAGS="-v -allow-leading-dots -dir-mode 0555 -iso-level 4"
-	mbfl_program_found_var MKISOFS mkisofs || exit $?
+	if ! mbfl_file_is_directory "$SOURCE_DIRECTORY"
+	then
+	    mbfl_message_error_printf 'source directory does not exist: "%s"' "$SOURCE_DIRECTORY"
+	    exit_because_failure
+	fi
+	if mbfl_file_is_file "$IMAGE_FILE"
+	then
+	    mbfl_message_error_printf 'target image file already exists: "%s"' "$IMAGE_FILE"
+	    exit_because_failure
+	fi
+	if mbfl_string_is_empty "$LABEL"
+	then
+	    mbfl_message_error_printf 'invalid empty label.'
+	    exit_because_failure
+	fi
+
+	mbfl_local_varref(MKISOFS)
+	local MKISOFS_FLAGS="-v -allow-leading-dots -dir-mode 0555 -iso-level 4"
+	mbfl_program_found_var mbfl_datavar(MKISOFS) mkisofs || exit $?
 
 	mbfl_program_exec "$MKISOFS" $MKISOFS_FLAGS -A '$LABEL' -o "$IMAGE_FILE" "$SOURCE_DIRECTORY"
     else
@@ -272,139 +198,6 @@ function script_action_ERASE () {
     mbfl_program_found_var CDRECORD cdrecord || exit $?
 
     mbfl_program_exec "$CDRECORD" $CDRECORD_FLAGS
-}
-
-### ------------------------------------------------------------------------
-
-function script_before_parsing_options_SUDO_MOUNT () {
-    mbfl_declare_option CDROM_MOUNT_POINT '/mnt/cdrom' m mount-point witharg 'Select the mount point.'
-}
-function script_action_SUDO_MOUNT () {
-    if mbfl_wrong_num_args 2 $ARGC
-    then
-	local MOUNT USR_ID GRP_ID
-	mbfl_program_found_var MOUNT /bin/mount || exit $?
-	USR_ID=${ARGV[0]}
-	GRP_ID=${ARGV[1]}
-	if mbfl_program_exec "$MOUNT" "$script_option_CDROM_MOUNT_POINT" -o uid="$USR_ID",gid="$GRP_ID" >&2
-	then true
-	else
-	    # Not all file systems support UID and GID options, so retry without those.
-	    if mbfl_program_exec "$MOUNT" "$script_option_CDROM_MOUNT_POINT" >&2
-	    then true
-	    else exit_failure
-	    fi
-	fi
-    else
-	mbfl_main_print_usage_screen_brief
-	exit_because_wrong_num_args
-    fi
-}
-
-### ------------------------------------------------------------------------
-
-function script_before_parsing_options_SUDO_UMOUNT () {
-    mbfl_declare_option CDROM_MOUNT_POINT '/mnt/cdrom' m mount-point witharg 'Select the mount point.'
-}
-function script_action_SUDO_UMOUNT () {
-    local UMOUNT
-    mbfl_program_found_var UMOUNT /bin/umount || exit $?
-    mbfl_program_exec "$UMOUNT" "$script_option_CDROM_MOUNT_POINT" >&2
-}
-
-#page
-#### help actions
-
-function script_before_parsing_options_HELP () {
-    script_USAGE="usage: ${script_PROGNAME} help [action] [options]"
-    script_DESCRIPTION='Help the user of this program.'
-}
-function script_action_HELP () {
-    # By faking the  selection of the MAIN action: we  cause "mbfl_main_print_usage_screen_brief" to
-    # print the main usage screen.
-    mbfl_actions_fake_action_set MAIN
-    mbfl_main_print_usage_screen_brief
-}
-
-### ------------------------------------------------------------------------
-
-function script_before_parsing_options_HELP_USAGE () {
-    script_USAGE="usage: ${script_PROGNAME} help usage [options]"
-    script_DESCRIPTION='Print the usage screen and exit.'
-}
-function script_action_HELP_USAGE () {
-    if mbfl_wrong_num_args 0 $ARGC
-    then
-	# By faking the selection of  the MAIN action: we cause "mbfl_main_print_usage_screen_brief"
-	# to print the main usage screen.
-	mbfl_actions_fake_action_set MAIN
-	mbfl_main_print_usage_screen_brief
-    else
-	mbfl_main_print_usage_screen_brief
-	exit_because_wrong_num_args
-    fi
-}
-
-## --------------------------------------------------------------------
-
-function script_before_parsing_options_HELP_PRINT_COMPLETIONS_SCRIPT () {
-    script_PRINT_COMPLETIONS="usage: ${script_PROGNAME} help print-completions-script [options]"
-    script_DESCRIPTION='Print the command-line completions script and exit.'
-}
-function script_action_HELP_PRINT_COMPLETIONS_SCRIPT () {
-    if mbfl_wrong_num_args 0 $ARGC
-    then mbfl_actions_completion_print_script "$COMPLETIONS_SCRIPT_NAMESPACE" "$script_PROGNAME"
-    else
-	mbfl_main_print_usage_screen_brief
-	exit_because_wrong_num_args
-    fi
-}
-
-#page
-#### helper functions
-
-function show_mount_point () {
-    mbfl_option_show_program_save
-    mbfl_option_test_save
-    {
-	local MOUNT GREP GAWK
-	mbfl_program_found_var MOUNT /bin/mount
-	mbfl_program_found_var GREP  /bin/grep
-	mbfl_program_found_var GAWK  /bin/gawk
-	mbfl_program_exec "$MOUNT" -l | mbfl_program_exec "$GREP" "$1" | mbfl_program_exec "$GAWK" '
-BEGIN {
-   COLOR_NORM_GREEN="\033[32;40m"
-   COLOR_BOLD_GREEN="\033[32;40;1m"
-   COLOR_NORM_PURPLE="\033[35;40m"
-   COLOR_BOLD_PURPLE="\033[35;40;1m"
-   COLOR_NORM_YELLOW="\033[33;40m"
-   COLOR_BOLD_YELLOW="\033[33;40;1m"
-   COLOR_NORM_CYAN="\033[36;40m"
-   COLOR_BOLD_CYAN="\033[36;40;1m"
-   COLOR_RESET="\033[0m"
-}
-// {
-   device=$1
-   mount_point=$3
-   fs_type=$5
-   options=$6
-   label1=$7
-   label2=$8
-   label3=$9
-   printf "%s%-12s%s", \
-     COLOR_BOLD_YELLOW, device, COLOR_RESET
-   printf " on"
-   printf " %s%-12s%s",
-     COLOR_BOLD_CYAN, mount_point, COLOR_RESET
-   printf " %s%s%s", COLOR_NORM_GREEN, fs_type, COLOR_RESET
-   printf " %s", options
-   printf " %s%s %s %s%s", \
-     COLOR_BOLD_PURPLE, label1, label2, label3, COLOR_RESET
-   printf "\n"
-}'
-    }
-    mbfl_option_show_program_restore
-    mbfl_option_test_restore
 }
 
 #page

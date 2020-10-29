@@ -48,7 +48,8 @@ CLEANFILES			+=			\
 	src/etc/bash_completion.d/phone.bash		\
 	src/etc/bash_completion.d/$(am__dirstamp)
 
-completions_PREREQUISITES	= src/etc/bash_completion.d/$(am__dirstamp)
+completions_PREREQUISITES	=			\
+	src/etc/bash_completion.d/$(am__dirstamp)
 
 src/etc/bash_completion.d/$(am__dirstamp):
 	@$(MKDIR_P) src/etc/bash_completion.d
@@ -73,6 +74,7 @@ src/etc/bash_completion.d/phone.bash: src/bin/phone $(completions_PREREQUISITES)
 #### scripts
 
 EXTRA_DIST		+=		\
+	src/bin/common.m4		\
 	src/bin/cdrom.m4		\
 	src/bin/floppy-disk.m4		\
 	src/bin/memory-card.m4		\
@@ -94,9 +96,11 @@ CLEANFILES		+=		\
 	src/bin/phone			\
 	src/bin/$(am__dirstamp)
 
-MBFLPP_FLAGS		= --preserve-comments --add-bash
+MBFLPP_FLAGS		= --add-bash --include=$(top_srcdir)/src/bin
 
-binscripts_PREREQUISITES = src/bin/$(am__dirstamp)
+binscripts_PREREQUISITES =		\
+	src/bin/common.m4		\
+	src/bin/$(am__dirstamp)
 
 src/bin/$(am__dirstamp):
 	@$(MKDIR_P) src/bin/

@@ -1,5 +1,5 @@
 #
-# Part of: Removable Media Utilities
+# Part of: MMUX Removable Media Utilities
 # Contents: floppy disk control
 # Date: Fri Jun  7, 2013
 #
@@ -39,39 +39,29 @@ declare -r COMPLETIONS_SCRIPT_NAMESPACE='p-mmux-removable-media-utilities'
 ### ------------------------------------------------------------------------
 
 declare -r SCRIPT_ARGV0="$0"
+declare -r DEFAULT_MOUNT_POINT=/mnt/floppy
+declare -r DEFAULT_GROUP_NAME=
 declare -r DEFAULT_DEVICE=/dev/fd/0
 declare -r DEFAULT_LABEL=nolabel
-declare -r DEFAULT_MOUNT_POINT=/mnt/floppy
-
-declare script_option_GROUP_NAME=
+declare -r DEFAULT_INODESIZE=1024
 
 #page
-#### library loading
+#### library loading and imports
 
 mbfl_library_loader
+m4_include([[[common.m4]]])
 
 #page
 #### program declarations
 
-mbfl_program_enable_sudo
-mbfl_declare_program /bin/mount
-mbfl_declare_program /bin/umount
-mbfl_declare_program /bin/grep
-mbfl_declare_program /bin/gawk
-mbfl_declare_program /bin/id
+# The program "mke2fs" comes with the "e2fsprogs" package.
 mbfl_declare_program /sbin/mke2fs
 
 # The program "superformat" comes with the "fdutils" package.
 mbfl_declare_program superformat
 
 #page
-#### script actions
-
-mbfl_declare_action_set HELP
-mbfl_declare_action HELP HELP_USAGE			NONE usage			'Print the help screen and exit.'
-mbfl_declare_action HELP HELP_PRINT_COMPLETIONS_SCRIPT	NONE print-completions-script	'Print the completions script for this program.'
-
-### --------------------------------------------------------------------
+#### script actions declaration
 
 mbfl_declare_action_set MAIN
 mbfl_declare_action MAIN MOUNT		NONE mount		'Mount a floppy disk.'
@@ -85,82 +75,27 @@ mbfl_declare_action MAIN SUDO_MKFS	NONE sudo-mkfs		'Internal action.'
 mbfl_declare_action MAIN HELP		HELP help		'Help the user of this script.'
 
 #page
-#### script options
-
-mbfl_declare_option GROUP_NAME '' g group witharg "Select the user's group name."
-
-#page
-#### main function
-
-function main () {
-    mbfl_main_print_usage_screen_brief
-}
-
-#page
 #### core action functions
 
-function script_before_parsing_options_MOUNT () {
-    script_USAGE="usage: ${script_PROGNAME} mount [options]"
-    script_DESCRIPTION='Mount a floppy disk.'
-    mbfl_declare_option MOUNT_POINT "$DEFAULT_MOUNT_POINT" m mount-point witharg 'Select the mount point.'
-}
-function script_action_MOUNT () {
-    local ID USR_ID GRP_ID FLAGS
-    ID=$(mbfl_program_found /bin/id)
-    USR_ID=$(mbfl_program_exec "$ID" --user)
-    if test -z "$script_option_GROUP_NAME"
-    then GRP_ID=$(mbfl_program_exec "$ID" --group)
-    else GRP_ID=$(mbfl_program_exec "$ID" "$script_option_GROUP_NAME" --group)
-    fi
-    mbfl_option_show_program && FLAGS="$FLAGS --show-program"
-    mbfl_program_declare_sudo_user root
-    if mbfl_program_exec "$SCRIPT_ARGV0" sudo-mount "$script_option_MOUNT_POINT" "$USR_ID" "$GRP_ID" $FLAGS
-    then
-	mbfl_option_verbose && show_mount_point "$script_option_MOUNT_POINT"
-	exit_success
-    else
-	mbfl_message_error 'error mounting floppy disk'
-	exit_failure
-    fi
-}
+DEVICE_GENERIC_ACTIONS([[[floppy disk]]])
 
-### ------------------------------------------------------------------------
-
-function script_before_parsing_options_UMOUNT () {
-    script_USAGE="usage: ${script_PROGNAME} umount [options]"
-    script_DESCRIPTION='Unmount a floppy disk.'
-    mbfl_declare_option MOUNT_POINT "$DEFAULT_MOUNT_POINT" m mount-point witharg 'Select the mount point.'
-}
-function script_action_UMOUNT () {
-    local FLAGS
-    mbfl_option_show_program && FLAGS="$FLAGS --show-program"
-    mbfl_program_declare_sudo_user root
-    if mbfl_program_exec "$SCRIPT_ARGV0" sudo-umount "$script_option_MOUNT_POINT" $FLAGS
-	# Always try to show the mount point.
-    then
-	mbfl_option_verbose && show_mount_point "$script_option_MOUNT_POINT"
-	exit_success
-    else
-	show_mount_point "$script_option_MOUNT_POINT"
-	mbfl_message_error 'error unmounting floppy disk'
-	exit_failure
-    fi
-}
-
-### ------------------------------------------------------------------------
+#page
+#### script actions: device specific actions
 
 function script_before_parsing_options_FORMAT () {
     script_USAGE="usage: ${script_PROGNAME} format [options]"
     script_DESCRIPTION='Format a floppy disk.  The device of integrated floppy drives
 is something like "/dev/fd/0"; a pluggable USB floppy drive may
 have device: "/dev/sdb".'
-    mbfl_declare_option DEVICE "$DEFAULT_DEVICE" d device witharg 'Select the floppy disk device.'
-    mbfl_declare_option LABEL  "$DEFAULT_LABEL"  l label  witharg 'Select the device label.'
+    mbfl_declare_option DEVICE    "$DEFAULT_DEVICE"    d  device    witharg 'Select the floppy disk device.'
+    mbfl_declare_option LABEL     "$DEFAULT_LABEL"     l  label     witharg 'Select the device label.'
+    mbfl_declare_option INODESIZE "$DEFAULT_INODESIZE" '' inodesize witharg 'Select the inode size.'
 }
 
 function script_action_FORMAT () {
-    local FLAGS
-    mbfl_option_show_program && FLAGS="$FLAGS --show-program"
+    mbfl_local_varref(FLAGS)
+    mbfl_getopts_gather_mbfl_options_var mbfl_datavar(FLAGS)
+
     mbfl_program_declare_sudo_user root
     if mbfl_program_exec "$SCRIPT_ARGV0" sudo-format "$script_option_DEVICE" $FLAGS
     then exit_success
@@ -169,7 +104,7 @@ function script_action_FORMAT () {
 	exit_failure
     fi
     mbfl_program_declare_sudo_user root
-    if mbfl_program_exec "$SCRIPT_ARGV0" sudo-mkfs "$script_option_DEVICE" "$script_option_LABEL" $FLAGS
+    if mbfl_program_exec "$SCRIPT_ARGV0" sudo-mkfs "$script_option_DEVICE" "$script_option_LABEL" "$script_option_INODESIZE" $FLAGS
     then exit_success
     else
 	mbfl_message_error 'error creating file system on the floppy disk'
@@ -179,65 +114,12 @@ function script_action_FORMAT () {
 
 ### ------------------------------------------------------------------------
 
-function script_before_parsing_options_SHOW () {
-    script_USAGE="usage: ${script_PROGNAME} show [options]"
-    script_DESCRIPTION='Show floppy disk mount status.'
-    mbfl_declare_option MOUNT_POINT "$DEFAULT_MOUNT_POINT" m mount-point witharg 'Select the mount point.'
-}
-function script_action_SHOW () {
-    show_mount_point "$script_option_MOUNT_POINT"
-}
-
-#page
-#### super user action functions
-
-function script_action_SUDO_MOUNT () {
-    local MOUNT
-    MOUNT=$(mbfl_program_found /bin/mount)
-    if mbfl_wrong_num_args 3 $ARGC
-    then
-	local MOUNT_POINT=${ARGV[0]}
-	local USR_ID=${ARGV[1]}
-	local GRP_ID=${ARGV[2]}
-	if mbfl_program_exec "$MOUNT" "$MOUNT_POINT" -o uid="$USR_ID",gid="$GRP_ID" >&2
-	then true
-	else
-            # Not all  file systems  support UID and  GID options,  so retry
-            # without those.
-	    mbfl_program_exec "$MOUNT" "$MOUNT_POINT" >&2
-	fi
-    else
-	mbfl_main_print_usage_screen_brief
-	exit_failure
-    fi
-}
-
-### ------------------------------------------------------------------------
-
-function script_action_SUDO_UMOUNT () {
-    UMOUNT=$(mbfl_program_found /bin/umount)
-    if mbfl_wrong_num_args 1 $ARGC
-    then
-	local MOUNT_POINT=${ARGV[0]}
-	mbfl_program_exec "$UMOUNT" "$MOUNT_POINT" >&2
-    else
-	mbfl_main_print_usage_screen_brief
-	exit_failure
-    fi
-}
-
-### ------------------------------------------------------------------------
-
-function script_before_parsing_options_SUDO_FORMAT () {
-    script_USAGE="usage: ${script_PROGNAME} sudo-format DEVICE [options]"
-    script_DESCRIPTION='Format the floppy disk.'
-}
 function script_action_SUDO_FORMAT () {
-    local SUPERFORMAT
-    SUPERFORMAT=$(mbfl_program_found superformat) || exit $?
     if mbfl_wrong_num_args 1 $ARGC
     then
-	local DEVICE=${ARGV[0]}
+	mbfl_command_line_argument(DEVICE, 0)
+	mbfl_local_varref(SUPERFORMAT)
+	mbfl_program_found_var mbfl_datavar(SUPERFORMAT) superformat || exit $?
 	mbfl_program_exec "$SUPERFORMAT" --verbosity 2 --superverify "$DEVICE" hd
     else
 	mbfl_main_print_usage_screen_brief
@@ -247,112 +129,19 @@ function script_action_SUDO_FORMAT () {
 
 ### ------------------------------------------------------------------------
 
-function script_before_parsing_options_SUDO_MKFS () {
-    script_USAGE="usage: ${script_PROGNAME} sudo-mkfs DEVICE LABEL [options]"
-    script_DESCRIPTION='Create a file system on the floppy disk.'
-}
-
 function script_action_SUDO_MKFS () {
-    local MKE2FS INODESIZE=1024
-    MKE2FS=$(mbfl_program_found /sbin/mke2fs) || exit $?
-    if mbfl_wrong_num_args 2 $ARGC
+    if mbfl_wrong_num_args 3 $ARGC
     then
-	local DEVICE=${ARGV[0]}
-	local LABEL=${ARGV[1]}
-	mbfl_program_exec "$MKE2FS" -c -i $INODESIZE -L "$LABEL" "$DEVICE"
+	mbfl_command_line_argument(DEVICE,    0)
+	mbfl_command_line_argument(LABEL,     1)
+	mbfl_command_line_argument(INODESIZE, 2)
+	mbfl_local_varref(MKE2FS)
+	mbfl_program_found_var mbfl_datavar(MKE2FS) /sbin/mke2fs || exit $?
+	mbfl_program_exec "$MKE2FS" -c -i "$INODESIZE" -L "$LABEL" "$DEVICE"
     else
 	mbfl_main_print_usage_screen_brief
 	exit_failure
     fi
-}
-
-#page
-#### help actions
-
-function script_before_parsing_options_HELP () {
-    script_USAGE="usage: ${script_PROGNAME} help [action] [options]"
-    script_DESCRIPTION='Help the user of this program.'
-}
-function script_action_HELP () {
-    # By faking the  selection of the MAIN action: we  cause "mbfl_main_print_usage_screen_brief" to
-    # print the main usage screen.
-    mbfl_actions_fake_action_set MAIN
-    mbfl_main_print_usage_screen_brief
-}
-
-### ------------------------------------------------------------------------
-
-function script_before_parsing_options_HELP_USAGE () {
-    script_USAGE="usage: ${script_PROGNAME} help usage [options]"
-    script_DESCRIPTION='Print the usage screen and exit.'
-}
-function script_action_HELP_USAGE () {
-    if mbfl_wrong_num_args 0 $ARGC
-    then
-	# By faking the selection of  the MAIN action: we cause "mbfl_main_print_usage_screen_brief"
-	# to print the main usage screen.
-	mbfl_actions_fake_action_set MAIN
-	mbfl_main_print_usage_screen_brief
-    else
-	mbfl_main_print_usage_screen_brief
-	exit_because_wrong_num_args
-    fi
-}
-
-## --------------------------------------------------------------------
-
-function script_before_parsing_options_HELP_PRINT_COMPLETIONS_SCRIPT () {
-    script_PRINT_COMPLETIONS="usage: ${script_PROGNAME} help print-completions-script [options]"
-    script_DESCRIPTION='Print the command-line completions script and exit.'
-}
-function script_action_HELP_PRINT_COMPLETIONS_SCRIPT () {
-    if mbfl_wrong_num_args 0 $ARGC
-    then mbfl_actions_completion_print_script "$COMPLETIONS_SCRIPT_NAMESPACE" "$script_PROGNAME"
-    else
-	mbfl_main_print_usage_screen_brief
-	exit_because_wrong_num_args
-    fi
-}
-
-#page
-#### helper functions
-
-function show_mount_point () {
-    local MOUNT GREP GAWK
-    MOUNT=$(mbfl_program_found /bin/mount)
-    GREP=$(mbfl_program_found /bin/grep)
-    GAWK=$(mbfl_program_found /bin/gawk)
-    mbfl_program_exec "$MOUNT" -l | mbfl_program_exec "$GREP" "$1" | mbfl_program_exec "$GAWK" '
-BEGIN {
-   COLOR_NORM_GREEN="\033[32;40m"
-   COLOR_BOLD_GREEN="\033[32;40;1m"
-   COLOR_NORM_PURPLE="\033[35;40m"
-   COLOR_BOLD_PURPLE="\033[35;40;1m"
-   COLOR_NORM_YELLOW="\033[33;40m"
-   COLOR_BOLD_YELLOW="\033[33;40;1m"
-   COLOR_NORM_CYAN="\033[36;40m"
-   COLOR_BOLD_CYAN="\033[36;40;1m"
-   COLOR_RESET="\033[0m"
-}
-// {
-   device=$1
-   mount_point=$3
-   fs_type=$5
-   options=$6
-   label1=$7
-   label2=$8
-   label3=$9
-   printf "%s%-12s%s", \
-     COLOR_BOLD_YELLOW, device, COLOR_RESET
-   printf " on"
-   printf " %s%-12s%s",
-     COLOR_BOLD_CYAN, mount_point, COLOR_RESET
-   printf " %s%s%s", COLOR_NORM_GREEN, fs_type, COLOR_RESET
-   printf " %s", options
-   printf " %s%s %s %s%s", \
-     COLOR_BOLD_PURPLE, label1, label2, label3, COLOR_RESET
-   printf "\n"
-}'
 }
 
 #page
