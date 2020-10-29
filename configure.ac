@@ -2,7 +2,7 @@ dnl @configure_input@
 dnl
 
 AC_PREREQ([2.69])
-MMUX_PKG_VERSIONS([2],[0],[0],[devel.0],[noarch])
+MMUX_PKG_VERSIONS([2],[0],[0],[devel.1],[noarch])
 AC_INIT([MMUX Removable Media Utilities],MMUX_PACKAGE_VERSION,
    [mrc.mgg@gmail.com],
    [mmux-removable-media-utilities],[http://github.com/marcomaggi/mmux-removable-media-utilities/])
