@@ -48,7 +48,7 @@ declare -r DEFAULT_INODESIZE=1024
 #page
 #### library loading and imports
 
-mbfl_library_loader
+mbfl_embed_library
 m4_include([[[common.m4]]])
 
 #page
